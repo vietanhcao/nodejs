@@ -1,5 +1,12 @@
 {
   "dependencies": {
-    "@types/node": "^12.7.9"
-  }
+    "@types/node": "^12.7.9",
+    "express": "^4.17.1"
+  },
+  "name": "nodebasic",
+  "version": "1.0.0",
+  "description": "learn nodejs",
+  "main": "index.js",
+  "author": "vietanhcao <vietanhcao1994@gmail.com>",
+  "license": "MIT"
 }
