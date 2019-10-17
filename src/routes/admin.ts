@@ -1,18 +1,20 @@
-import express from "express";
+import express from 'express';
+import path from 'path';
+import { util as rootDir } from '../ultil/path';
 
-const router = express.Router();
+const adminRouter = express.Router();
 
-router.use('/product-add', (req, res, next) => {
-  // next(); // allow request to next continue middleware  in line
-  res.send('<form action="/product" method="POST"><input type="text" name="title"/><button type="submit">add product</button></form>')
-})
+// /admin/add-product => get
+adminRouter.get('/add-product', (req, res, next) => {
+  // next(); // allow request to next continue middleware  in liners
+  console.log(rootDir)
+  res.sendFile(path.join(rootDir, 'views', 'add-product.html'));
+});
 
-router.post('/product', (req, res, next) => {
+// /admin/product => post
+adminRouter.post('/product', (req, res, next) => {
   console.log(req.body);
+	res.redirect('/');
+});
 
-  res.redirect('/')
-})
-
-
-module.exports = router 
-
+export = adminRouter;

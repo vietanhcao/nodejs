@@ -1,12 +1,10 @@
 
 import express from "express";
 import bodyParser from 'body-parser';
+import path from "path";
+import adminRouter from "./routes/admin";
+import shopRouter from './routes/shop';
 
-const adminRouter = require('./routes/admin');
-const shopRouter = require('./routes/shop');
-// import shopRouter from './routes/shop';
-
-// console.log(adminRouter)
 
 const app = express();
 
@@ -14,11 +12,14 @@ const app = express();
 app.use(bodyParser.urlencoded({extended: false}));
 // app.disable('etag');
 
+app.use(express.static(path.join(__dirname,'public')))
+console.log('ddddd',__dirname)
 app.use('/admin',adminRouter);
+
 app.use(shopRouter);
 
 app.use((req,res,next)=> {
-  res.status(404).send('<h1>Page not pound</h1>');
+  res.status(404).sendFile(path.join(__dirname,'views','404.html'));
 })
 
 app.listen(3002);

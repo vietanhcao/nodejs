@@ -1,12 +1,14 @@
 import express from "express";
+import path from 'path';
+import { util as rootDir } from '../ultil/path';
+const shopRouter = express.Router();
 
-const router = express.Router();
 
 
-
-router.get('/',(req,res,next)=> {
-  console.log('not ok');
-  res.send('<h1>hello ok</h1>');
+shopRouter.get('/',(req,res,next)=> {
+  console.log(rootDir);
+  res.sendFile(path.join(rootDir,'views','shop.html'))// not slash because on windown \ , linus use / dir
+  //'/views/shop.html'
 })
 
-module.exports = router;
+export = shopRouter;
