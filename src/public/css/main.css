@@ -7,6 +7,9 @@ body {
     main {
       padding: 1rem;
     }
+    .girl{
+      display: flex;
+    }
   
     .main-header {
       width: 100%;

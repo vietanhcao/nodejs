@@ -10,7 +10,7 @@ const _product: any[] = [];
 _adminRouter.get('/add-product', (req, res, next) => {
   // next(); // allow request to next continue middleware  in liners
   // console.log(rootDir)
-  res.sendFile(path.join(rootDir, 'views', 'add-product.html'));
+  res.render('add-product',{pageTitle: "Add Product", path: 'admin/add-product'});
 });
 
 // /admin/product => post

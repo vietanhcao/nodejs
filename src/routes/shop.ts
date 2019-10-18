@@ -7,9 +7,8 @@ const shopRouter = express.Router();
 
 
 shopRouter.get('/',(req,res,next)=> {
-  console.log(adminData);
-  res.sendFile(path.join(rootDir,'views','shop.html'))// not slash because on windown \ , linus use / dir
-  //'/views/shop.html'
+  // res.sendFile(path.join(rootDir,'views','shop.html'))// not slash because on windown \ , linus use / dir
+  res.render('shop', { prods: adminData, pageTitle: 'Shop', path:'/'})
 })
 
 export = shopRouter;
