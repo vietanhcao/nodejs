@@ -17,9 +17,9 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
   // _product.push({ title: req.body.title })
   res.redirect('/');
 }
-export const getShopProduct: RequestHandler = (req, res, next) => {
+export const getShopProduct: RequestHandler = async (req, res, next) => {
   // res.sendFile(path.join(rootDir,'views','shop.html'))// not slash because on windown \ , linus use / dir
-  const products = Product.fetchAll();
+  const products = await Product.fetchAll();
   res.render('shop', {
     prods: products,
     pageTitle: 'Shop',

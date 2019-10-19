@@ -1,6 +1,6 @@
 import express from 'express';
 import path from 'path';
-import { util as rootDir } from '../ultil/path';
+import { getYourPath as rootDir } from '../ultil/path';
 import { getAddProduct, postAddProduct } from "../controllers/products";
 const _adminRouter = express.Router();
 

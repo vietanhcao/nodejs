@@ -9,6 +9,7 @@ body {
     }
     .girl{
       display: flex;
+      flex-wrap: wrap;
     }
   
     .main-header {
