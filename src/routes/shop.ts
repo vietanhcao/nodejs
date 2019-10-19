@@ -1,14 +1,11 @@
 import express from "express";
 import path from 'path';
 import { util as rootDir } from '../ultil/path';
-import { adminData } from "./admin";
+import { getShopProduct } from "../controllers/products";
 const shopRouter = express.Router();
 
 
 
-shopRouter.get('/',(req,res,next)=> {
-  // res.sendFile(path.join(rootDir,'views','shop.html'))// not slash because on windown \ , linus use / dir
-  res.render('shop', { prods: adminData, pageTitle: 'Shop', path:'/'})
-})
+shopRouter.get('/', getShopProduct)
 
 export = shopRouter;
