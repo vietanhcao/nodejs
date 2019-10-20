@@ -5,12 +5,12 @@ import path from "path";
 import { adminRouter } from "./routes/admin";
 import shopRouter from './routes/shop';
 import { get404Page } from './controllers/error';
-
+import { getYourPath } from './ultil/path';
 
 const app = express();
 
 app.set('view engine', 'pug');
-app.set('views','src/views');
+app.set('views', getYourPath + '/views');
 
 app.use(bodyParser.urlencoded({extended: false}));
 // app.disable('etag');

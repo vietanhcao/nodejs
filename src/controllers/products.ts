@@ -5,7 +5,7 @@ import { Product } from '../models/product';
 export const getAddProduct: RequestHandler = (req, res, next) => {
   // next(); // allow request to next continue middleware  in liners
   // console.log(rootDir)
-  res.render('add-product', {
+  res.render('admin/add-product', {
     pageTitle: "Add Product",
     path: 'admin/add-product'
   });
@@ -20,7 +20,7 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
 export const getShopProduct: RequestHandler = async (req, res, next) => {
   // res.sendFile(path.join(rootDir,'views','shop.html'))// not slash because on windown \ , linus use / dir
   const products = await Product.fetchAll();
-  res.render('shop', {
+  res.render('shop/shop', {
     prods: products,
     pageTitle: 'Shop',
     path: '/'
