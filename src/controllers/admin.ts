@@ -7,7 +7,7 @@ export const getAddProduct: RequestHandler = (req, res, next) => {
   // console.log(rootDir)
   res.render('admin/add-product', {
     pageTitle: "Add Product",
-    path: 'admin/add-product'
+    path: '/admin/add-product'
   });
 }
 export const postAddProduct: RequestHandler = (req, res, next) => {
@@ -17,24 +17,12 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
   // _product.push({ title: req.body.title })
   res.redirect('/');
 }
-export const getShopProduct: RequestHandler = async (req, res, next) => {
-  // res.sendFile(path.join(rootDir,'views','shop.html'))// not slash because on windown \ , linus use / dir
+
+export const getProducts: RequestHandler = async (req, res, next) => {
   const products = await Product.fetchAll();
-  res.render('shop/shop', {
+  res.render('admin/products', {
     prods: products,
-    pageTitle: 'Shop',
-    path: '/'
+    pageTitle: 'Admin Products',
+    path: '/admin/products'
   })
 }
-
-
-
-
-
-
-
-
-
-
-
-// export const adminData = _product;

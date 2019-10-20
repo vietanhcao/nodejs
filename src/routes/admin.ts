@@ -1,15 +1,18 @@
 import express from 'express';
 import path from 'path';
 import { getYourPath as rootDir } from '../ultil/path';
-import { getAddProduct, postAddProduct } from "../controllers/products";
+import * as adminController from "../controllers/admin";
 const _adminRouter = express.Router();
 
 
 // /admin/add-product => get
-_adminRouter.get('/add-product', getAddProduct );
+_adminRouter.get('/add-product', adminController.getAddProduct );
+
+// /adminproducts => get
+_adminRouter.get('/products', adminController.getProducts );
 
 // /admin/product => post
-_adminRouter.post('/product', postAddProduct );
+_adminRouter.post('/product', adminController.postAddProduct );
 
 export const adminRouter = _adminRouter;
 

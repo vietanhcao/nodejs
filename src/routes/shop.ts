@@ -1,9 +1,17 @@
 import express from "express";
 import path from 'path';
 import { getYourPath as rootDir } from '../ultil/path';
-import { getShopProduct } from "../controllers/products";
+import * as shopController from "../controllers/shop";
 const shopRouter = express.Router();
 
-shopRouter.get('/', getShopProduct)
+shopRouter.get('/', shopController.getIndex)
+
+shopRouter.get('/products', shopController.getProducts)
+
+
+shopRouter.get('/cart', shopController.getCart);
+
+
+shopRouter.get('/checkout', shopController.getCheckout);
 
 export = shopRouter;
