@@ -11,7 +11,8 @@ export const getAddProduct: RequestHandler = (req, res, next) => {
   });
 }
 export const postAddProduct: RequestHandler = (req, res, next) => {
-  const product = new Product(req.body.title);
+  const { title, imageUrl, price, description } = req.body;
+  const product = new Product(title, imageUrl, price, description);
   product.save();
 
   // _product.push({ title: req.body.title })

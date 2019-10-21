@@ -11,6 +11,8 @@ shopRouter.get('/products', shopController.getProducts)
 
 shopRouter.get('/cart', shopController.getCart);
 
+shopRouter.get('/Orders', shopController.getOrders);
+
 
 shopRouter.get('/checkout', shopController.getCheckout);
 

@@ -4,16 +4,16 @@ block styles
 block content
   main
       if prods.length > 0 
-        .girl
+        .grid
           each product in prods
             article.card.product-item
               header.card__header
                 h1.product__title #{product.title}
               .card__image
-                img(src='images/book.jpg', alt="A Book")
+                img(src=product.imageUrl , alt=product.title)
               .card__content
-                  h2.product__price $19.99
-                  p.product__description A very interesting book about so many even more interesting things!
+                  h2.product__price #{product.price}
+                  p.product__description #{product.description}
               .card__actions
                   button.btn Add to Cart
       else

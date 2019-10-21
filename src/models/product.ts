@@ -14,9 +14,15 @@ const getProductFromFile = ()  =>  {
   })
 }
 export class Product {
-  title: string
-  constructor(title : any){
+  title: string;
+  imageUrl: string;
+  description: string;
+  price: string;
+  constructor(title: string, imageUrl?: string, description?: string, price?: string){
     this.title = title;
+    this.imageUrl = imageUrl;
+    this.description = description;
+    this.price = price;
   }
   async save(){
     let products : any = await getProductFromFile();

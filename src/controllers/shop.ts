@@ -26,6 +26,13 @@ export const getCart: RequestHandler = async (req, res, next) => {
     path: '/cart'
   })
 }
+export const getOrders: RequestHandler = async (req, res, next) => {
+  res.render('shop/orders', {
+    // prods: products,
+    pageTitle: 'Your Orders',
+    path: '/orders'
+  })
+}
 export const getCheckout: RequestHandler = async (req, res, next) => {
   res.render('shop/checkout', {
     // prods: products,
