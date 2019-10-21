@@ -1,6 +1,4 @@
 extends ../layouts/main-layout.pug 
-block styles
-  link(rel="stylesheet", href="/css/add-product.css")
 block content
   main
       if prods.length > 0 
@@ -15,6 +13,7 @@ block content
                 h2.product__price #{product.price}
                 p.product__description #{product.description}
               .card__actions
+                a(href=("/products/" + product.id) class="btn") Detail
                 form(action="/add-to-card", method="post")
                   button.btn Add to Cart
       else

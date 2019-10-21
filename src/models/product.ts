@@ -18,6 +18,7 @@ export class Product {
   imageUrl: string;
   description: string;
   price: string;
+  id:string;
   constructor(title: string, imageUrl?: string, description?: string, price?: string){
     this.title = title;
     this.imageUrl = imageUrl;
@@ -25,6 +26,7 @@ export class Product {
     this.price = price;
   }
   async save(){
+    this.id = Math.random().toString();
     let products : any = await getProductFromFile();
     products.push(this)
     fs.writeFile(p, JSON.stringify(products),(err)=> { 

@@ -11,6 +11,13 @@ export const getProducts: RequestHandler = async (req, res, next) => {
     path: '/products'
   })
 }
+
+export const getProduct: RequestHandler = async (req, res, next) => {
+  const prodId = req.params.productId;
+  console.log(prodId)
+  res.redirect('/');
+}
+
 export const getIndex: RequestHandler = async (req, res, next) => {
   const products = await Product.fetchAll();
   res.render('shop/index', {
