@@ -5,7 +5,7 @@ const p = path.join(path.dirname(process.mainModule.filename),
   'data',
   'products.json'
 );
-const getProductFromFile = ()  =>  {
+const getProductFromFile = (): Promise<any[]>  =>  {
   return new Promise((res, rej) => {
       fs.readFile(p, (err, fileContent) => {
         if (err) res([]);
@@ -35,5 +35,10 @@ export class Product {
   }
   static  fetchAll(){
     return   getProductFromFile()
+  }
+  static async findById(id: string){
+    let products : any[] = await getProductFromFile();
+    return products.find(o => o.id === id)
+    
   }
 }

@@ -14,8 +14,12 @@ export const getProducts: RequestHandler = async (req, res, next) => {
 
 export const getProduct: RequestHandler = async (req, res, next) => {
   const prodId = req.params.productId;
-  console.log(prodId)
-  res.redirect('/');
+  let product = await Product.findById(prodId)
+  res.render('shop/product-detail',{
+    product,
+    pageTitle: 'Product-detail',
+    path: '/products'
+  });
 }
 
 export const getIndex: RequestHandler = async (req, res, next) => {
@@ -32,6 +36,16 @@ export const getCart: RequestHandler = async (req, res, next) => {
     pageTitle: 'Your Cart',
     path: '/cart'
   })
+}
+export const postCart: RequestHandler = async (req, res, next) => {
+  const {productId} = req.body
+  console.log(productId)
+  // res.render('shop/cart', {
+  //   // prods: products,
+  //   pageTitle: 'Your Cart',
+  //   path: '/cart'
+  // })
+  res.redirect('/cart')
 }
 export const getOrders: RequestHandler = async (req, res, next) => {
   res.render('shop/orders', {
