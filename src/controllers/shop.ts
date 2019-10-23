@@ -1,5 +1,6 @@
 import { RequestHandler } from "express";
 import { Product } from '../models/product';
+import { Cart } from '../models/cart';
 
 
 export const getProducts: RequestHandler = async (req, res, next) => {
@@ -38,8 +39,9 @@ export const getCart: RequestHandler = async (req, res, next) => {
   })
 }
 export const postCart: RequestHandler = async (req, res, next) => {
-  const {productId} = req.body
-  console.log(productId)
+  const {productId} = req.body;
+  let product = await Product.findById(productId);
+  Cart.addProduct(product.id,product.price)
   // res.render('shop/cart', {
   //   // prods: products,
   //   pageTitle: 'Your Cart',

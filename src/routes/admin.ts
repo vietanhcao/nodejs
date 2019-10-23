@@ -14,5 +14,9 @@ _adminRouter.get('/products', adminController.getProducts );
 // /admin/product => post
 _adminRouter.post('/product', adminController.postAddProduct );
 
+_adminRouter.get('/edit-product:productId', adminController.getEditProduct );
+
+_adminRouter.post('/edit-product', adminController.postEditProduct );
+
 export const adminRouter = _adminRouter;
 

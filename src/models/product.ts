@@ -30,13 +30,13 @@ export class Product {
     let products : any = await getProductFromFile();
     products.push(this)
     fs.writeFile(p, JSON.stringify(products),(err)=> { 
-      console.log(err)
+      if (err) console.log(err)
     })
   }
   static  fetchAll(){
     return   getProductFromFile()
   }
-  static async findById(id: string){
+  static async findById(id: string): Promise<Product> {
     let products : any[] = await getProductFromFile();
     return products.find(o => o.id === id)
     

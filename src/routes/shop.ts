@@ -18,9 +18,6 @@ shopRouter.get('/cart', shopController.getCart);
 
 shopRouter.post('/cart', shopController.postCart);
 
-
-
-
 shopRouter.get('/Orders', shopController.getOrders);
 
 
