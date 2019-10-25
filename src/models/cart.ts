@@ -56,6 +56,9 @@ export class Cart {
       cart = JSON.parse(fileContent.toString());
       const updatedCart = {...cart};
       const product = updatedCart.products.find(pro => pro.id === id);
+      if (product === undefined){
+        return;
+      }
       const productQty = product.qty;
       updatedCart.products = updatedCart.products.filter(prod => prod.id !== id)
       updatedCart.totalPrice = + updatedCart.totalPrice - ( + productPrice)  *  productQty;
@@ -63,6 +66,20 @@ export class Cart {
         if (error) console.log(error);
       })
     })
+
+  }
+
+  static getCart = (): Promise<ItemCart>=>{
+    return new Promise((res,rej)=> {
+      fs.readFile(p, (err, fileContent) => {
+        const cart: ItemCart = JSON.parse(fileContent.toString());
+        if(err){
+          res(null);
+        }
+        res(cart);
+      });
+    })
+    
 
   }
   // constructor(){

@@ -55,7 +55,7 @@ export class Product {
       }
     })
   }
-  static  fetchAll(){
+  static  fetchAll= () =>{
     return   getProductFromFile()
   }
   static async findById(id: string): Promise<Product> {

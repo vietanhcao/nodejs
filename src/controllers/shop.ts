@@ -32,8 +32,18 @@ export const getIndex: RequestHandler = async (req, res, next) => {
   })
 }
 export const getCart: RequestHandler = async (req, res, next) => {
+  const cart = await Cart.getCart();
+  const products = await Product.fetchAll();
+  let cartProducts: any[];
+  cartProducts = products.reduce((arr, product) => {
+    const cartProductData = cart.products.find(prod => prod.id === product.id);
+    if (cartProductData) {
+      arr.push({ productData: product, qty: cartProductData.qty });
+    }
+    return arr;
+  },[])
   res.render('shop/cart', {
-    // prods: products,
+    products: cartProducts,
     pageTitle: 'Your Cart',
     path: '/cart'
   })
@@ -48,6 +58,12 @@ export const postCart: RequestHandler = async (req, res, next) => {
   //   path: '/cart'
   // })
   res.redirect('/cart')
+}
+export const postCartDeleteProduct: RequestHandler = async (req, res, next) => {
+  const {productId} = req.body;
+  let product = await Product.findById(productId);
+  Cart.deleteProduct(productId, product.price);
+  res.redirect('/cart');
 }
 export const getOrders: RequestHandler = async (req, res, next) => {
   res.render('shop/orders', {
