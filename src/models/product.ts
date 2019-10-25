@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { Cart } from './cart';
 
 const p = path.join(path.dirname(process.mainModule.filename),
   'data',
@@ -19,18 +20,39 @@ export class Product {
   description: string;
   price: string;
   id:string;
-  constructor(title: string, imageUrl?: string, description?: string, price?: string){
+  constructor(id : string, title: string, imageUrl?: string, description?: string, price?: string){
+    this.id = id;
     this.title = title;
     this.imageUrl = imageUrl;
     this.description = description;
     this.price = price;
   }
   async save(){
-    this.id = Math.random().toString();
-    let products : any = await getProductFromFile();
-    products.push(this)
-    fs.writeFile(p, JSON.stringify(products),(err)=> { 
-      if (err) console.log(err)
+    let products: any[] = await getProductFromFile();
+    if(this.id){
+      const exitingProductIndex = products.findIndex(prod => prod.id === this.id);
+      const updatedProducts = [...products];
+      updatedProducts[exitingProductIndex] = this;
+      fs.writeFile(p, JSON.stringify(updatedProducts), (err) => {
+        if (err) console.log(err)
+      })
+    }else{
+      this.id = Math.random().toString();
+      products.push(this)
+      fs.writeFile(p, JSON.stringify(products), (err) => {
+        if (err) console.log(err) 
+      })
+    }
+   
+  }
+  static deleteById = async (id:string) =>{
+    let products: any[] = await getProductFromFile();
+    const product = products.find(prod => prod.id === id);
+    const updatedProducts = products.filter(prod => prod.id !== id);
+    fs.writeFile(p, JSON.stringify(updatedProducts), error => {
+      if(!error) {
+        Cart.deleteProduct(id, product.price);
+      }
     })
   }
   static  fetchAll(){

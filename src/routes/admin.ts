@@ -12,11 +12,13 @@ _adminRouter.get('/add-product', adminController.getAddProduct );
 _adminRouter.get('/products', adminController.getProducts );
 
 // /admin/product => post
-_adminRouter.post('/product', adminController.postAddProduct );
+_adminRouter.post('/add-product', adminController.postAddProduct );
 
 _adminRouter.get('/edit-product:productId', adminController.getEditProduct );
 
 _adminRouter.post('/edit-product', adminController.postEditProduct );
+
+_adminRouter.post('/delete-product', adminController.postDeleteProduct );
 
 export const adminRouter = _adminRouter;
 

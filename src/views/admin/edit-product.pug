@@ -3,7 +3,7 @@ block styles
   link(rel="stylesheet", href="/css/forms.css")
 block content
   main
-      form.product-form(action="/admin/product", method="POST") 
+      form.product-form(action=(editing ? "/admin/edit-product" : "/admin/add-product"), method="POST") 
         .form-control
           label(for="title")  Title
           input(type="text", name="title",value=(editing ? product.title : ""))#title
@@ -17,6 +17,8 @@ block content
           label(for="description") Description
           textarea#description(name="description", cols="30", rows="3") #{(editing ? product.description : "")}
           //- input(type="text", name="description")#description
-          button.btn(type="submit") #{(editing ? 'Update Product' : "Add Product ")} 
+        if editing 
+          input(type="hidden", name="pordId", value=product.id)
+        button.btn(type="submit") #{(editing ? 'Update Product' : "Add Product ")} 
        
 

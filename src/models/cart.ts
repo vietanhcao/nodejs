@@ -1,6 +1,15 @@
 import fs from 'fs';
 import path from 'path';
 
+interface ItemCartProducts {
+  id:string;
+  qty:number;
+}
+
+interface ItemCart {
+  products: ItemCartProducts[];
+  totalPrice: number;
+}
 const p = path.join(path.dirname(process.mainModule.filename),
   'data',
   'cart.json'
@@ -11,7 +20,7 @@ export class Cart {
   static addProduct(id:string, productPrice: string){
     //fetch the previous cart
     fs.readFile(p,(err,fileContent)=> {
-      let cart: { products: any[], totalPrice:number } = { products: [], totalPrice: 0 }
+      let cart: ItemCart = { products: [], totalPrice: 0 }
       if(!err){
         cart = JSON.parse(fileContent.toString());
       }
@@ -38,7 +47,24 @@ export class Cart {
     
     
   }
+  static deleteProduct = (id:string, productPrice:string)=> {
+    let cart: ItemCart; 
+    fs.readFile(p, (err, fileContent) => {
+      if(err){
+        return;
+      }//{"products":[{"id":"0.5088149628053462","qty":2},{"id":"0.6711327087339796","qty":1}],"totalPrice":96.12}
+      cart = JSON.parse(fileContent.toString());
+      const updatedCart = {...cart};
+      const product = updatedCart.products.find(pro => pro.id === id);
+      const productQty = product.qty;
+      updatedCart.products = updatedCart.products.filter(prod => prod.id !== id)
+      updatedCart.totalPrice = + updatedCart.totalPrice - ( + productPrice)  *  productQty;
+      fs.writeFile(p, JSON.stringify(updatedCart), (error) => {
+        if (error) console.log(error);
+      })
+    })
 
+  }
   // constructor(){
   //   this.products = [];
   //   this.totalPrice = 0;
