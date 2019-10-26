@@ -6,11 +6,16 @@ import { adminRouter } from "./routes/admin";
 import shopRouter from './routes/shop';
 import { get404Page } from './controllers/error';
 import { getYourPath } from './ultil/path';
+import db from "./ultil/database";
 
 const app = express();
 
+
+
 app.set('view engine', 'pug');
 app.set('views', getYourPath + '/views');
+
+
 
 app.use(bodyParser.urlencoded({extended: false}));
 // app.disable('etag');
