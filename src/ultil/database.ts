@@ -1,6 +1,6 @@
-// import mysql from "mysql";
+import mysql from "mysql2";
 
-const mysql = require('mysql2');
+// const mysql = require('mysql2');
 
 const pool = mysql.createPool({
   host: 'localhost',
@@ -8,5 +8,4 @@ const pool = mysql.createPool({
   database: 'node-complete',
   password: 'sao14111',
 })
-
 export default pool.promise();
