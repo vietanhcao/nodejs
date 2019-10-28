@@ -6,7 +6,9 @@ import { adminRouter } from "./routes/admin";
 import shopRouter from './routes/shop';
 import { get404Page } from './controllers/error';
 import { getYourPath } from './ultil/path';
-import db from "./ultil/database";
+import sequelize from "./ultil/database";
+// import Product from "./models/product";
+import { DataTypes } from "sequelize";
 
 const app = express();
 
@@ -25,6 +27,16 @@ app.use(express.static(path.join(__dirname,'public'))) //file css
 app.use('/admin',adminRouter);
 app.use(shopRouter);
 
-app.use(get404Page)
+app.use(get404Page);
+// Product.sequelize.sync({ force: true, logging: console.log })
+// Product.create()
 
-app.listen(3002);
+sequelize.sync()
+  .then((result:any) => {
+    console.log('result');
+    app.listen(3002);
+  })
+  .catch((err: any)=> {
+    console.log(err)
+  })
+

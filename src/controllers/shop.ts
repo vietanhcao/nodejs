@@ -1,40 +1,40 @@
 import { RequestHandler } from "express";
-import { Product } from '../models/product';
+// import { Product } from '../models/product';
 import { Cart } from '../models/cart';
 
 
 export const getProducts: RequestHandler = async (req, res, next) => {
   // res.sendFile(path.join(rootDir,'views','shop.html'))// not slash because on windown \ , linus use / dir
-  const [rows , fielData ] = await Product.fetchAll();
-  res.render('shop/product-list', {
-    prods: rows,
-    pageTitle: 'All Product',
-    path: '/products'
-  })
+  // const [rows , fielData ] = await Product.fetchAll();
+  // res.render('shop/product-list', {
+  //   prods: rows,
+  //   pageTitle: 'All Product',
+  //   path: '/products'
+  // })
 }
 
 export const getProduct: RequestHandler = async (req, res, next) => {
-  try {
-    const prodId = req.params.productId;
-    let [product, fiedData] = await Product.findById(prodId)
-    res.render('shop/product-detail', {
-      product: product[0],
-      pageTitle: 'Product-detail',
-      path: '/products'
-    });
-  } catch (error) {
-    console.log(error)
-  }
+  // try {
+  //   const prodId = req.params.productId;
+  //   let [product, fiedData] = await Product.findById(prodId)
+  //   res.render('shop/product-detail', {
+  //     product: product[0],
+  //     pageTitle: 'Product-detail',
+  //     path: '/products'
+  //   });
+  // } catch (error) {
+  //   console.log(error)
+  // }
   
 }
 
 export const getIndex: RequestHandler = async (req, res, next) => {
-  const [rows, fielData] = await Product.fetchAll();
-  res.render('shop/index', {
-    prods: rows,
-    pageTitle: 'Shop',
-    path: '/'
-  });
+  // const [rows, fielData] = await Product.fetchAll();
+  // res.render('shop/index', {
+  //   prods: rows,
+  //   pageTitle: 'Shop',
+  //   path: '/'
+  // });
 }
 export const getCart: RequestHandler = async (req, res, next) => {
   // const cart = await Cart.getCart();
