@@ -1,4 +1,5 @@
 import { RequestHandler } from "express";
+import Product from "../models/product";
 // import { Product } from '../models/product';
 
 
@@ -11,36 +12,43 @@ export const getAddProduct: RequestHandler = (req, res, next) => {
   });
 }
 export const postAddProduct: RequestHandler = async (req, res, next) => {
-  // const { title, imageUrl, description, price } = req.body;
-  // const product = new Product(null,title, imageUrl, description, price);
-  // await product.save();
+  const { title, imageUrl, description, price } = req.body;
+  Product.create({
+    title, imageUrl, description, price
+  })
+  .then(response => console.log('create-Table'))
+  .catch(err => console.log(err))
   
-  // // _product.push({ title: req.body.title })
-  // res.redirect('/');
+  // _product.push({ title: req.body.title })
+  res.redirect('/');
 }
 export const getEditProduct: RequestHandler = async (req, res, next) => {
-  // const editMode = req.query.edit;
-  // if(!editMode){
-  //   return res.redirect('/');
-  // }
-  // const productId = req.params.productId;
-  // let [product, fiedData] = await Product.findById(productId);
-  // if(!product[0]){
-  //   return res.redirect('/');
-  // }
-  // res.render('admin/edit-product', {
-  //   pageTitle: "Edit Product",
-  //   path: '/admin/edit-product',
-  //   editing: editMode,
-  //   product: product[0]
-  // });
+  const editMode = req.query.edit;
+  if(!editMode){
+    return res.redirect('/');
+  }
+  const productId = req.params.productId;
+  let product = await Product.findByPk(productId);
+  if(!product){
+    return res.redirect('/');
+  }
+  res.render('admin/edit-product', {
+    pageTitle: "Edit Product",
+    path: '/admin/edit-product',
+    editing: editMode,
+    product: product
+  });
   
 }
 export const postEditProduct: RequestHandler = async (req, res, next) => {
-  // const { pordId, title, imageUrl, description, price } = req.body;
-  // const updatedProduct = new Product(pordId, title, imageUrl, description, price);
-  // updatedProduct.save();
-  // res.redirect('/admin/products');
+  const { pordId, title, imageUrl, description, price } = req.body;
+  let product : any  = await Product.findByPk(pordId);
+  product.title = title
+  product.imageUrl = imageUrl
+  product.description = description
+  product.price = price
+  await product.save()
+  res.redirect('/admin/products');
 }
 
 export const postDeleteProduct: RequestHandler = async (req, res, next) => {
@@ -53,10 +61,10 @@ export const postDeleteProduct: RequestHandler = async (req, res, next) => {
 
 
 export const getProducts: RequestHandler = async (req, res, next) => {
-  // const [products, fiedData] = await Product.fetchAll();
-  // res.render('admin/products', {
-  //   prods: products,
-  //   pageTitle: 'Admin Products',
-  //   path: '/admin/products'
-  // })
+  let products = await Product.findAll();
+  res.render('admin/products', {
+    prods: products,
+    pageTitle: 'Admin Products',
+    path: '/admin/products'
+  })
 }

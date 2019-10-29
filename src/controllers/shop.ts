@@ -1,40 +1,52 @@
 import { RequestHandler } from "express";
 // import { Product } from '../models/product';
 import { Cart } from '../models/cart';
+import Product from "../models/product";
 
 
 export const getProducts: RequestHandler = async (req, res, next) => {
   // res.sendFile(path.join(rootDir,'views','shop.html'))// not slash because on windown \ , linus use / dir
-  // const [rows , fielData ] = await Product.fetchAll();
-  // res.render('shop/product-list', {
-  //   prods: rows,
-  //   pageTitle: 'All Product',
-  //   path: '/products'
-  // })
+  try {
+    const Products = await Product.findAll();
+    res.render('shop/product-list', {
+      prods: Products,
+      pageTitle: 'All Product',
+      path: '/products'
+    });
+  } catch (error) {
+    console.log('get product', error)
+  }
 }
 
 export const getProduct: RequestHandler = async (req, res, next) => {
-  // try {
-  //   const prodId = req.params.productId;
-  //   let [product, fiedData] = await Product.findById(prodId)
-  //   res.render('shop/product-detail', {
-  //     product: product[0],
-  //     pageTitle: 'Product-detail',
-  //     path: '/products'
-  //   });
-  // } catch (error) {
-  //   console.log(error)
-  // }
+  try {
+    const prodId = req.params.productId;
+    let product = await Product.findByPk(prodId); return //vonly product
+    // let product :any[] = await Product.findAll({where:{
+    //   id:prodId
+    // }});//return array product match
+    res.render('shop/product-detail', {
+      product: product,
+      pageTitle: 'Product-detail',
+      path: '/products'
+    });
+  } catch (error) {
+    console.log('get product', error)
+  }
   
 }
 
 export const getIndex: RequestHandler = async (req, res, next) => {
-  // const [rows, fielData] = await Product.fetchAll();
-  // res.render('shop/index', {
-  //   prods: rows,
-  //   pageTitle: 'Shop',
-  //   path: '/'
-  // });
+  try {
+    const Products = await Product.findAll();
+    res.render('shop/index', {
+      prods: Products,
+      pageTitle: 'Shop',
+      path: '/'
+    });
+  } catch (error) {
+    console.log('get product', error)
+  }
 }
 export const getCart: RequestHandler = async (req, res, next) => {
   // const cart = await Cart.getCart();

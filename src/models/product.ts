@@ -1,7 +1,8 @@
-import { DataTypes } from "sequelize";
+import { DataTypes, Model } from "sequelize";
 import sequelize from '../ultil/database';
 
-const Product = sequelize.define('product',{
+class Product extends Model { }
+Product.init({
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -21,5 +22,11 @@ const Product = sequelize.define('product',{
     type: DataTypes.STRING,
     allowNull: false
   }
+}, {
+  sequelize,
+  modelName: 'product'
+  // options
 });
+
+
 export default Product;

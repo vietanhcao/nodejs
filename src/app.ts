@@ -33,7 +33,7 @@ app.use(get404Page);
 
 sequelize.sync()
   .then((result:any) => {
-    console.log('result');
+    // console.log('result');
     app.listen(3002);
   })
   .catch((err: any)=> {
