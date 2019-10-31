@@ -21,7 +21,7 @@ export const getProducts: RequestHandler = async (req, res, next) => {
 export const getProduct: RequestHandler = async (req, res, next) => {
   try {
     const prodId = req.params.productId;
-    let product = await Product.findByPk(prodId); return //vonly product
+    let product = await Product.findByPk(prodId); //return //vonly product
     // let product :any[] = await Product.findAll({where:{
     //   id:prodId
     // }});//return array product match

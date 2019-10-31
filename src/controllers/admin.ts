@@ -1,9 +1,8 @@
-import { RequestHandler } from "express";
+import { RequestHandler, Request } from "express";
 import Product from "../models/product";
 // import { Product } from '../models/product';
 
-
-export const getAddProduct: RequestHandler = (req, res, next) => {
+export const getAddProduct: RequestHandler = (req, res, next)  => {
   // next(); // allow request to next continue middleware  in liners
   // console.log(rootDir)
   res.render('admin/edit-product', {
@@ -11,14 +10,11 @@ export const getAddProduct: RequestHandler = (req, res, next) => {
     path: '/admin/add-product'
   });
 }
-export const postAddProduct: RequestHandler = async (req, res, next) => {
+export const postAddProduct: RequestHandler  = async (req: any, res, next) => {
   const { title, imageUrl, description, price } = req.body;
-  Product.create({
-    title, imageUrl, description, price
-  })
-  .then(response => console.log('create-Table'))
-  .catch(err => console.log(err))
-  
+  await req.user.createProduct({
+    title, imageUrl, description, price,
+  });
   // _product.push({ title: req.body.title })
   res.redirect('/');
 }
@@ -52,11 +48,11 @@ export const postEditProduct: RequestHandler = async (req, res, next) => {
 }
 
 export const postDeleteProduct: RequestHandler = async (req, res, next) => {
-  // const { productId } = req.body;
-  // await Product.deleteById(productId);
-  // // const updatedProduct = new Product(pordId, title, imageUrl, description, price);
-  // // updatedProduct.save();
-  // res.redirect('/admin/products');
+  const { productId } = req.body;
+  // Product.destroy({})
+  let product = await Product.findByPk(productId);
+  product.destroy();
+  res.redirect('/admin/products');
 }
 
 
