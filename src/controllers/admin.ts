@@ -18,13 +18,19 @@ export const postAddProduct: RequestHandler  = async (req: any, res, next) => {
   // _product.push({ title: req.body.title })
   res.redirect('/');
 }
-export const getEditProduct: RequestHandler = async (req, res, next) => {
+export const getEditProduct: RequestHandler = async (req: any, res, next) => {
   const editMode = req.query.edit;
   if(!editMode){
     return res.redirect('/');
   }
   const productId = req.params.productId;
-  let product = await Product.findByPk(productId);
+  // let product = await Product.findByPk(productId);
+  let product:any[] = await req.user.getProducts({
+    where:{
+      id: productId
+    }
+  })
+  product = product[0];
   if(!product){
     return res.redirect('/');
   }
@@ -47,17 +53,23 @@ export const postEditProduct: RequestHandler = async (req, res, next) => {
   res.redirect('/admin/products');
 }
 
-export const postDeleteProduct: RequestHandler = async (req, res, next) => {
+export const postDeleteProduct: RequestHandler = async (req:any, res, next) => {
   const { productId } = req.body;
   // Product.destroy({})
-  let product = await Product.findByPk(productId);
+  let product = await req.user.getProducts({
+    where: {
+      id: productId
+    }
+  })
+  product = product[0];
   product.destroy();
   res.redirect('/admin/products');
 }
 
 
-export const getProducts: RequestHandler = async (req, res, next) => {
-  let products = await Product.findAll();
+export const getProducts: RequestHandler = async (req:any, res, next) => {
+  // let products = await Product.findAll();
+  let products = await req.user.getProducts();
   res.render('admin/products', {
     prods: products,
     pageTitle: 'Admin Products',

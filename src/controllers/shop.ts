@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 // import { Product } from '../models/product';
-import { Cart } from '../models/cart';
+import  Cart  from '../models/cart';
 import Product from "../models/product";
 
 

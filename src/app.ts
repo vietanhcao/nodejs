@@ -9,6 +9,8 @@ import sequelize from './ultil/database';
 import Product from './models/product';
 import { DataTypes } from 'sequelize';
 import User from './models/user';
+import Cart from './models/cart';
+import CartItem from './models/cart-item';
 
 const app = express();
 
@@ -34,10 +36,14 @@ app.use(get404Page);
 // add one to many relationship
 Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
 User.hasMany(Product);
+User.hasOne(Cart);
+Cart.belongsTo(User);
+Cart.belongsToMany(Product,{through: CartItem});
+Product.belongsToMany(Cart, { through: CartItem });
 
 sequelize
-	.sync()
-	// {force:true} // override my table
+	// .sync()
+	.sync({ force: true })// override my table
 	.then(async (result: any) => {
 		let user = await User.findByPk(1);
 		if (!user) {
