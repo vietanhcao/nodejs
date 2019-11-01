@@ -11,6 +11,8 @@ import { DataTypes } from 'sequelize';
 import User from './models/user';
 import Cart from './models/cart';
 import CartItem from './models/cart-item';
+import Order from './models/order';
+import OrderItem from './models/order-Item';
 
 const app = express();
 
@@ -33,25 +35,29 @@ app.use(shopRouter);
 
 app.use(get404Page);
 // Product.sequelize.sync({ force: true, logging: console.log })
-// add one to many relationship
+// setup relationship add one to many relationship
 Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
 User.hasMany(Product);
 User.hasOne(Cart);
 Cart.belongsTo(User);
 Cart.belongsToMany(Product,{through: CartItem});
 Product.belongsToMany(Cart, { through: CartItem });
+Order.belongsTo(User);
+User.hasMany(Order);
+Order.belongsToMany(Product, {through: OrderItem })
 
 sequelize
 	// .sync()
 	.sync({ force: true })// override my table
 	.then(async (result: any) => {
-		let user = await User.findByPk(1);
+		let user:any = await User.findByPk(1);
 		if (!user) {
-			await User.create({
+			user = await User.create({
 				name: 'Max',
 				email: 'test@test.com'
 			});
 		}
+		user.createCart()
 		app.listen(3002);
 	})
 	.catch((err: any) => {
