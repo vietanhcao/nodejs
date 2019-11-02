@@ -1,7 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import path from 'path';
-// import { adminRouter } from './routes/admin';
+import { adminRouter } from './routes/admin';
 // import shopRouter from './routes/shop';
 import { get404Page } from './controllers/error';
 import { getYourPath } from './ultil/path';
@@ -20,11 +20,11 @@ app.use(express.static(path.join(__dirname, 'public'))); //file css
 app.use(async (req: any, res, next) => {
 	// let user = await User.findByPk(1);
 	// req.user = user;
-	// next();
+	next();
 });
 
 // => rounter .....
-// app.use('/admin', adminRouter);
+app.use('/admin', adminRouter);
 // app.use(shopRouter);
 
 app.use(get404Page);
@@ -33,7 +33,7 @@ app.use(get404Page);
 
 
 (async()=> {
-	let client = await mongoConnected
-	console.log(client)
+	let client = await mongoConnected()
+	// console.log(client)
 	app.listen(3002);
 })()

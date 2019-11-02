@@ -64,7 +64,7 @@
       // "emitDecoratorMetadata": true,         /* Enables experimental support for emitting type metadata for decorators. */
     },
     "include": [
-      "src/**/*", "public"
+      "src/**/*", "src/public"
     ],
     "lib": [
       "es2015"
