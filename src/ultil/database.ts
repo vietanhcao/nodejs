@@ -1,10 +1,6 @@
-// import mysql from "mysql2";
-import {Sequelize} from "sequelize";
+import { MongoClient }   from "mongodb";
+
+export const mongoConnected = MongoClient.connect(`mongodb+srv://vietanhcao:sao14111@cluster0-iyrhv.mongodb.net/test?retryWrites=true&w=majority`);
 
 
-const sequelize = new Sequelize('node-complete','root','sao14111',{
-  dialect: 'mysql',
-  host: 'localhost',
-  logging: false
-});
-export default sequelize;
+

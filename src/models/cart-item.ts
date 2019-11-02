@@ -1,20 +1,20 @@
-import { DataTypes, Model } from "sequelize";
-import sequelize from '../ultil/database';
+// import { DataTypes, Model } from "sequelize";
+// import sequelize from '../ultil/database';
 
-class CartItem extends Model { }
+// class CartItem extends Model { }
 
-CartItem.init({
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    allowNull: false,
-    primaryKey: true
-  },
-  quantity: DataTypes.INTEGER,
+// CartItem.init({
+//   id: {
+//     type: DataTypes.INTEGER,
+//     autoIncrement: true,
+//     allowNull: false,
+//     primaryKey: true
+//   },
+//   quantity: DataTypes.INTEGER,
 
-}, {
-  sequelize,
-  modelName: 'cartItem'
-})
+// }, {
+//   sequelize,
+//   modelName: 'cartItem'
+// })
 
-export default CartItem
+// export default CartItem

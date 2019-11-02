@@ -1,94 +1,94 @@
-import { DataTypes, Model } from "sequelize";
-import sequelize from '../ultil/database';
+// import { DataTypes, Model } from "sequelize";
+// import sequelize from '../ultil/database';
 
-class Cart extends Model {}
+// class Cart extends Model {}
 
-Cart.init({
-  id:{
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    allowNull: false,
-    primaryKey:true
-  }
-},{
-    sequelize,
-    modelName: 'cart'
-})
+// Cart.init({
+//   id:{
+//     type: DataTypes.INTEGER,
+//     autoIncrement: true,
+//     allowNull: false,
+//     primaryKey:true
+//   }
+// },{
+//     sequelize,
+//     modelName: 'cart'
+// })
 
-export default Cart
+// export default Cart
 
-// export class Cart {
-//   products: any[];
-//   totalPrice: number;
-//   static addProduct(id:string, productPrice: string){
-//     //fetch the previous cart
-//     fs.readFile(p,(err,fileContent)=> {
-//       let cart: ItemCart = { products: [], totalPrice: 0 }
-//       if(!err){
-//         cart = JSON.parse(fileContent.toString());
-//       }
-//       //analyze the cart => Find existing product
-//       const existingProductIndex = cart.products.findIndex(product => product.id === id);
-//       const existingProduct = cart.products[existingProductIndex];
-//       //Add new product/ increase quatity
-//       let updatedProduct;
-//       if (existingProduct){
-//         updatedProduct = { ...existingProduct };
-//         updatedProduct.qty = updatedProduct.qty + 1;
-//         cart.products = [...cart.products];
-//         cart.products[existingProductIndex] = updatedProduct ;
+// // export class Cart {
+// //   products: any[];
+// //   totalPrice: number;
+// //   static addProduct(id:string, productPrice: string){
+// //     //fetch the previous cart
+// //     fs.readFile(p,(err,fileContent)=> {
+// //       let cart: ItemCart = { products: [], totalPrice: 0 }
+// //       if(!err){
+// //         cart = JSON.parse(fileContent.toString());
+// //       }
+// //       //analyze the cart => Find existing product
+// //       const existingProductIndex = cart.products.findIndex(product => product.id === id);
+// //       const existingProduct = cart.products[existingProductIndex];
+// //       //Add new product/ increase quatity
+// //       let updatedProduct;
+// //       if (existingProduct){
+// //         updatedProduct = { ...existingProduct };
+// //         updatedProduct.qty = updatedProduct.qty + 1;
+// //         cart.products = [...cart.products];
+// //         cart.products[existingProductIndex] = updatedProduct ;
 
-//       }else{
-//         updatedProduct = { id: id, qty: 1  } ;
-//         cart.products = [...cart.products, updatedProduct];
-//       }
-//       cart.totalPrice = cart.totalPrice + Number(productPrice);
-//       fs.writeFile(p, JSON.stringify(cart),(error)=> {
-//         if(error) console.log(error)
-//       } )
-//     })
+// //       }else{
+// //         updatedProduct = { id: id, qty: 1  } ;
+// //         cart.products = [...cart.products, updatedProduct];
+// //       }
+// //       cart.totalPrice = cart.totalPrice + Number(productPrice);
+// //       fs.writeFile(p, JSON.stringify(cart),(error)=> {
+// //         if(error) console.log(error)
+// //       } )
+// //     })
     
     
-//   }
-//   static deleteProduct = (id:string, productPrice:string)=> {
-//     let cart: ItemCart; 
-//     fs.readFile(p, (err, fileContent) => {
-//       if(err){
-//         return;
-//       }//{"products":[{"id":"0.5088149628053462","qty":2},{"id":"0.6711327087339796","qty":1}],"totalPrice":96.12}
-//       cart = JSON.parse(fileContent.toString());
-//       const updatedCart = {...cart};
-//       const product = updatedCart.products.find(pro => pro.id === id);
-//       if (product === undefined){
-//         return;
-//       }
-//       const productQty = product.qty;
-//       updatedCart.products = updatedCart.products.filter(prod => prod.id !== id)
-//       updatedCart.totalPrice = + updatedCart.totalPrice - ( + productPrice)  *  productQty;
-//       fs.writeFile(p, JSON.stringify(updatedCart), (error) => {
-//         if (error) console.log(error);
-//       })
-//     })
+// //   }
+// //   static deleteProduct = (id:string, productPrice:string)=> {
+// //     let cart: ItemCart; 
+// //     fs.readFile(p, (err, fileContent) => {
+// //       if(err){
+// //         return;
+// //       }//{"products":[{"id":"0.5088149628053462","qty":2},{"id":"0.6711327087339796","qty":1}],"totalPrice":96.12}
+// //       cart = JSON.parse(fileContent.toString());
+// //       const updatedCart = {...cart};
+// //       const product = updatedCart.products.find(pro => pro.id === id);
+// //       if (product === undefined){
+// //         return;
+// //       }
+// //       const productQty = product.qty;
+// //       updatedCart.products = updatedCart.products.filter(prod => prod.id !== id)
+// //       updatedCart.totalPrice = + updatedCart.totalPrice - ( + productPrice)  *  productQty;
+// //       fs.writeFile(p, JSON.stringify(updatedCart), (error) => {
+// //         if (error) console.log(error);
+// //       })
+// //     })
 
-//   }
+// //   }
 
-//   static getCart = (): Promise<ItemCart>=>{
-//     return new Promise((res,rej)=> {
-//       fs.readFile(p, (err, fileContent) => {
-//         const cart: ItemCart = JSON.parse(fileContent.toString());
-//         if(err){
-//           res(null);
-//         }
-//         res(cart);
-//       });
-//     })
+// //   static getCart = (): Promise<ItemCart>=>{
+// //     return new Promise((res,rej)=> {
+// //       fs.readFile(p, (err, fileContent) => {
+// //         const cart: ItemCart = JSON.parse(fileContent.toString());
+// //         if(err){
+// //           res(null);
+// //         }
+// //         res(cart);
+// //       });
+// //     })
     
 
-//   }
-//   // constructor(){
-//   //   this.products = [];
-//   //   this.totalPrice = 0;
-//   // }
+// //   }
+// //   // constructor(){
+// //   //   this.products = [];
+// //   //   this.totalPrice = 0;
+// //   // }
 
 
-// }
+// // }
