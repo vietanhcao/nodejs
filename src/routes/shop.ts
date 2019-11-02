@@ -20,7 +20,9 @@ shopRouter.post('/cart-delete-item', shopController.postCartDeleteProduct);
 
 shopRouter.get('/Orders', shopController.getOrders);
 
+shopRouter.post('/create-order', shopController.postOrder);
 
-shopRouter.get('/checkout', shopController.getCheckout);
+
+// shopRouter.get('/checkout', shopController.getCheckout);
 
 export = shopRouter;

@@ -7,7 +7,6 @@ import { get404Page } from './controllers/error';
 import { getYourPath } from './ultil/path';
 import sequelize from './ultil/database';
 import Product from './models/product';
-import { DataTypes } from 'sequelize';
 import User from './models/user';
 import Cart from './models/cart';
 import CartItem from './models/cart-item';
@@ -47,8 +46,8 @@ User.hasMany(Order);
 Order.belongsToMany(Product, {through: OrderItem })
 
 sequelize
-	// .sync()
-	.sync({ force: true })// override my table
+	.sync()
+	// .sync({ force: true })// override my table
 	.then(async (result: any) => {
 		let user:any = await User.findByPk(1);
 		if (!user) {

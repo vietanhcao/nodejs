@@ -1,6 +1,5 @@
 import { RequestHandler } from "express";
 // import { Product } from '../models/product';
-import  Cart  from '../models/cart';
 import Product from "../models/product";
 
 
@@ -120,19 +119,26 @@ export const postCartDeleteProduct: RequestHandler = async (req:any, res, next) 
   // Cart.deleteProduct(productId, product.price);
   
 }
-export const getOrders: RequestHandler = async (req, res, next) => {
+export const getOrders: RequestHandler = async (req:any, res, next) => {
+  let orders = await req.user.getOrders({
+    include: ['products'] //feching all order include products per order -- relation between order and product
+  });
   res.render('shop/orders', {
-    // prods: products,
+    orders,
     pageTitle: 'Your Orders',
     path: '/orders'
   })
 }
-export const getCheckout: RequestHandler = async (req, res, next) => {
-  res.render('shop/checkout', {
-    // prods: products,
-    pageTitle: 'Checkout',
-    path: '/checkout'
-  })
+export const postOrder: RequestHandler = async (req: any, res, next) => {
+  let cart = await req.user.getCart();
+  let products = await cart.getProducts();
+  let order = await req.user.createOrder();
+  await order.addProducts(products.map( p => {
+    p.orderItem = { quantity: p.cartItem.quantity}
+    return p;
+  }))
+  await cart.setProducts(null);
+  res.redirect('/orders')
 }
 
 

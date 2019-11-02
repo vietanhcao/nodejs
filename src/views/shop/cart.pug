@@ -12,6 +12,11 @@ block content
             form(action="/cart-delete-item", method="post")
               input(type="hidden", name="productId" value=product.id)
               button.btn(type="submit") delete
+      .centered
+        br
+        form(action="/create-order", method="post")
+          button.btn(type="submit") Order Now!
+
 
 
     else
