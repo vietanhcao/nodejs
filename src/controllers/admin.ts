@@ -1,6 +1,7 @@
 import { RequestHandler, Request } from "express";
 import Product from "../models/product";
 // import { Product } from '../models/product';
+import { ObjectID } from 'mongodb';
 
 export const getAddProduct: RequestHandler = (req, res, next)  => {
   // next(); // allow request to next continue middleware  in liners
@@ -11,10 +12,12 @@ export const getAddProduct: RequestHandler = (req, res, next)  => {
   });
 }
 export const postAddProduct: RequestHandler  = async (req: any, res, next) => {
-  const { title, imageUrl, description, price } = req.body;
-  await req.user.createProduct({
-    title, imageUrl, description, price,
-  });
+  const { title, price,  description, imageUrl } = req.body;
+  const product = new Product(title, price, description, imageUrl);
+  let dummy = await product.save();
+  // await req.user.createProduct({
+  //   title, imageUrl, description, price,
+  // });
   // _product.push({ title: req.body.title })
   res.redirect('/');
 }
@@ -25,12 +28,7 @@ export const getEditProduct: RequestHandler = async (req: any, res, next) => {
   }
   const productId = req.params.productId;
   // let product = await Product.findByPk(productId);
-  let product:any[] = await req.user.getProducts({
-    where:{
-      id: productId
-    }
-  })
-  product = product[0];
+  const product = await Product.findById(productId)
   if(!product){
     return res.redirect('/');
   }
@@ -44,12 +42,8 @@ export const getEditProduct: RequestHandler = async (req: any, res, next) => {
 }
 export const postEditProduct: RequestHandler = async (req, res, next) => {
   const { pordId, title, imageUrl, description, price } = req.body;
-  // let product : any  = await Product.findByPk(pordId);
-  // product.title = title
-  // product.imageUrl = imageUrl
-  // product.description = description
-  // product.price = price
-  // await product.save()
+  const _product = new Product(title, price, description, imageUrl, new ObjectID(pordId) )
+  await _product.save()
   res.redirect('/admin/products');
 }
 
@@ -68,8 +62,7 @@ export const postDeleteProduct: RequestHandler = async (req:any, res, next) => {
 
 
 export const getProducts: RequestHandler = async (req:any, res, next) => {
-  // let products = await Product.findAll();
-  let products = await req.user.getProducts();
+  let products = await Product.fetchAll();
   res.render('admin/products', {
     prods: products,
     pageTitle: 'Admin Products',

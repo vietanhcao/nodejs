@@ -9,14 +9,14 @@ const _adminRouter = express.Router();
 _adminRouter.get('/add-product', adminController.getAddProduct );
 
 // // /adminproducts => get
-// _adminRouter.get('/products', adminController.getProducts );
+_adminRouter.get('/products', adminController.getProducts );
 
 // /admin/product => post
 _adminRouter.post('/add-product', adminController.postAddProduct );
 
-// _adminRouter.get('/edit-product:productId', adminController.getEditProduct );
+_adminRouter.get('/edit-product:productId', adminController.getEditProduct );
 
-// _adminRouter.post('/edit-product', adminController.postEditProduct );
+_adminRouter.post('/edit-product', adminController.postEditProduct );
 
 // _adminRouter.post('/delete-product', adminController.postDeleteProduct );
 

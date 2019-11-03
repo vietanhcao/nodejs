@@ -13,7 +13,7 @@ block content
                 h2.product__price #{product.price}
                 p.product__description #{product.description}
               .card__actions
-                a(href=("/products/" + product.id) class="btn") Detail
+                a(href=("/products/" + product._id) class="btn") Detail
                 include ../includes/add-to-card.pug
       else
           h1 No Products

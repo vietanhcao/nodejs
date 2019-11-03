@@ -18,7 +18,7 @@ block content
           textarea#description(name="description", cols="30", rows="3") #{(editing ? product.description : "")}
           //- input(type="text", name="description")#description
         if editing 
-          input(type="hidden", name="pordId", value=product.id)
+          input(type="hidden", name="pordId", value=product._id)
         button.btn(type="submit") #{(editing ? 'Update Product' : "Add Product ")} 
        
 

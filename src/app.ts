@@ -2,7 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import path from 'path';
 import { adminRouter } from './routes/admin';
-// import shopRouter from './routes/shop';
+import shopRouter from './routes/shop';
 import { get404Page } from './controllers/error';
 import { getYourPath } from './ultil/path';
 import { mongoConnected } from './ultil/database';
@@ -25,7 +25,7 @@ app.use(async (req: any, res, next) => {
 
 // => rounter .....
 app.use('/admin', adminRouter);
-// app.use(shopRouter);
+app.use(shopRouter);
 
 app.use(get404Page);
 // Product.sequelize.sync({ force: true, logging: console.log })
