@@ -18,7 +18,7 @@ _adminRouter.get('/edit-product:productId', adminController.getEditProduct );
 
 _adminRouter.post('/edit-product', adminController.postEditProduct );
 
-// _adminRouter.post('/delete-product', adminController.postDeleteProduct );
+_adminRouter.post('/delete-product', adminController.postDeleteProduct );
 
 export const adminRouter = _adminRouter;
 

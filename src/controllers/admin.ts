@@ -42,7 +42,7 @@ export const getEditProduct: RequestHandler = async (req: any, res, next) => {
 }
 export const postEditProduct: RequestHandler = async (req, res, next) => {
   const { pordId, title, imageUrl, description, price } = req.body;
-  const _product = new Product(title, price, description, imageUrl, new ObjectID(pordId) )
+  const _product = new Product(title, price, description, imageUrl, pordId )
   await _product.save()
   res.redirect('/admin/products');
 }
@@ -50,13 +50,8 @@ export const postEditProduct: RequestHandler = async (req, res, next) => {
 export const postDeleteProduct: RequestHandler = async (req:any, res, next) => {
   const { productId } = req.body;
   // Product.destroy({})
-  let product = await req.user.getProducts({
-    where: {
-      id: productId
-    }
-  })
-  product = product[0];
-  product.destroy();
+  let product = await Product.deleteById(productId)
+
   res.redirect('/admin/products');
 }
 
