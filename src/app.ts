@@ -6,6 +6,7 @@ import shopRouter from './routes/shop';
 import { get404Page } from './controllers/error';
 import { getYourPath } from './ultil/path';
 import { mongoConnected } from './ultil/database';
+import User from './models/user';
 
 
 const app = express();
@@ -18,8 +19,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public'))); //file css
 
 app.use(async (req: any, res, next) => {
-	// let user = await User.findByPk(1);
-	// req.user = user;
+	let user = await User.findById('5dc051910898360637d6418f');
+	req.user = user;
 	next();
 });
 

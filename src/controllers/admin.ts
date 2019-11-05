@@ -13,7 +13,7 @@ export const getAddProduct: RequestHandler = (req, res, next)  => {
 }
 export const postAddProduct: RequestHandler  = async (req: any, res, next) => {
   const { title, price,  description, imageUrl } = req.body;
-  const product = new Product(title, price, description, imageUrl);
+  const product = new Product(title, price, description, imageUrl, req.user._id);
   let dummy = await product.save();
   // await req.user.createProduct({
   //   title, imageUrl, description, price,

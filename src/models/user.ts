@@ -1,22 +1,22 @@
+import { getDb } from "../ultil/database";
+import { ObjectId } from 'mongodb';
 
-// import { Model, DataTypes } from 'sequelize';
-// import sequelize from '../ultil/database';
 
-// class User extends Model {};
-// User.init({
-//   id: {
-//     type: DataTypes.INTEGER,
-//     autoIncrement: true,
-//     allowNull: false,
-//     primaryKey: true
-//   },
-//   name: DataTypes.STRING,
-//   email: DataTypes.STRING,
+class User {
+  name: string;
+  email:string;
+  constructor(username: string, email: string){
+    this.name = username;
+    this.email = email;
+  }
+  save = () => {
+    const db = getDb();
+    return db.collection('users').insertOne(this)
+  }
+  static findById = (id:string) =>{
+    const db = getDb();
+    return db.collection('users').findOne({_id:  new ObjectId(id)});
+  }
+}
 
-// },{
-//   sequelize,
-//   modelName: 'user'
-
-// })
-
-// export default User
+export default User;

@@ -11,13 +11,15 @@ class Product {
   description: string;
   imageUrl: string;
   _id: ObjectId ;
+  userId: string ;
 
-  constructor(title: string, price: string, description: string, imageUrl: string, id?: string) {
+  constructor(title: string, price: string, description: string, imageUrl: string, userId : string, id?: string) {
     this.title = title;
     this.price = price;
     this.description = description;
     this.imageUrl = imageUrl;
-    this._id = new ObjectId(id);
+    this.userId = userId;
+    this._id = id && new ObjectId(id);
   }
 
   save = async()=>{
