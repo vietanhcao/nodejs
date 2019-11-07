@@ -20,7 +20,7 @@ app.use(express.static(path.join(__dirname, 'public'))); //file css
 
 app.use(async (req: any, res, next) => {
 	let user = await User.findById('5dc051910898360637d6418f');
-	req.user = user;
+	req.user = new User(user.name,user.email, user.cart, user._id);
 	next();
 });
 

@@ -71,7 +71,9 @@ export const getCart: RequestHandler = async (req :any, res, next) => {
   // })
 }
 export const postCart: RequestHandler = async (req:any, res, next) => {
-  // const {productId} = req.body;
+  const {productId} = req.body;
+  let product = await Product.findById(productId);
+  let result = await req.user.addToCart(product);
   // let cart = await req.user.getCart(); // get cart
   // let newQuantity = 1;
   // let product ;
