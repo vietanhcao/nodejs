@@ -47,8 +47,7 @@ export const getIndex: RequestHandler = async (req, res, next) => {
   }
 }
 export const getCart: RequestHandler = async (req :any, res, next) => {
-  let cart = await req.user.getCart(); // get cart
-  let cartProducts = await cart.getProducts();// cartItem association
+  let cartProducts = await req.user.getCart(); // get cart
   res.render('shop/cart', {
     products: cartProducts,
     pageTitle: 'Your Cart',
@@ -74,50 +73,21 @@ export const postCart: RequestHandler = async (req:any, res, next) => {
   const {productId} = req.body;
   let product = await Product.findById(productId);
   let result = await req.user.addToCart(product);
-  // let cart = await req.user.getCart(); // get cart
-  // let newQuantity = 1;
-  // let product ;
-  // let products =  await cart.getProducts({
-  //   where: {
-  //     id: productId
-  //   }
-  // })
-  // if (products.length > 0){
-  //   product = products[0];
-  // }
-  // if(product){
-  //   const oldQuantity = product.cartItem.quantity;
-  //   newQuantity = oldQuantity + 1;
-  //   cart.addProduct(product, {
-  //     through: {
-  //       quantity: newQuantity
-  //     }
-  //   })
-  // }else{
-  //   let productFind = await Product.findByPk(productId);
-  //   cart.addProduct(productFind,{through: {
-  //     quantity: newQuantity
-  //   }})
-  // }
-  // let product = await Product.findById(productId);
-  // Cart.addProduct(product.id,product.price)
-  // // res.render('shop/cart', {
-  // //   // prods: products,
-  // //   pageTitle: 'Your Cart',
-  // //   path: '/cart'
-  // // })
   res.redirect('/cart') 
 }
 export const postCartDeleteProduct: RequestHandler = async (req:any, res, next) => {
   const {productId} = req.body;
-  let cart = await req.user.getCart();
-  let products = await cart.getProducts({
-    where: {
-      id: productId
-    }
-  })
-  let product = products[0];
-  product.cartItem.destroy();
+  // let product = await Product.findById(productId);
+
+  let result = await req.user.deleteItemFromCart(productId);
+  // let cart = await req.user.getCart();
+  // let products = await cart.getProducts({
+  //   where: {
+  //     id: productId
+  //   }
+  // })
+  // let product = products[0];
+  // product.cartItem.destroy();
   res.redirect('/cart');
   // let product = await Product.findById(productId);
   // Cart.deleteProduct(productId, product.price);
@@ -134,14 +104,7 @@ export const getOrders: RequestHandler = async (req:any, res, next) => {
   })
 }
 export const postOrder: RequestHandler = async (req: any, res, next) => {
-  let cart = await req.user.getCart();
-  let products = await cart.getProducts();
-  let order = await req.user.createOrder();
-  await order.addProducts(products.map( p => {
-    p.orderItem = { quantity: p.cartItem.quantity}
-    return p;
-  }))
-  await cart.setProducts(null);
+  await req.user.addOrder();
   res.redirect('/orders')
 }
 

@@ -38,6 +38,48 @@ class User {
     return db.collection('users').updateOne({ _id: this._id }, { $set: { cart: updateCart }});
 
   }
+  getCart = async() => {
+    // return this.cart;
+    const db = getDb();
+    const productIds = this.cart.items.map(e => e.productId);
+    let products = await db.collection('products').find({_id: {
+      $in: productIds
+    }}).toArray()
+    return products.map(p => {
+      return { 
+        ...p, 
+        quantity: this.cart.items.find(i => i.productId.toString() === p._id.toString()).quantity
+      }
+    })
+  }
+  deleteItemFromCart = async (productId) => {
+    const db = getDb();
+    let updatedCartItems = this.cart.items.filter(o => {
+      return o.productId.toString() !== productId.toString()
+    })
+    const updateCart = { items: updatedCartItems }
+    return db.collection('users').updateOne({_id : this._id}, {$set : {cart: updateCart}});
+    
+  }
+  addOrder = async() => {
+    const db = getDb();
+    let cartProducts = await this.getCart();
+    const order = {
+      item: cartProducts,
+      user: {
+        _id: new ObjectId(this._id),
+        name: this.name,
+        email:this.email,
+
+      }
+    }
+    await db.collection('orders').insertOne(order);// create collection and insert
+    return db.collection('users').updateOne({ _id: this._id }, { $set: { cart: { items: [] } } }) // clear cart
+  }
+  getOrder = async() => {
+    const db = getDb();
+    // db.collection('orders').find()
+  }
   static findById = (id:string) =>{
     const db = getDb();
     return db.collection('users').findOne({_id:  new ObjectId(id)});

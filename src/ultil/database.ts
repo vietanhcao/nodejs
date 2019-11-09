@@ -3,6 +3,7 @@ import { MongoClient, Db }   from "mongodb";
 let _db: Db  ;
 export const mongoConnected = async () => {
   const mongoClient = await MongoClient.connect(`mongodb+srv://vietanhcao:sao14111@cluster0-iyrhv.mongodb.net/test?retryWrites=true&w=majority`);
+  console.log('Connected!');
   _db = mongoClient.db()
   return mongoClient
 }
