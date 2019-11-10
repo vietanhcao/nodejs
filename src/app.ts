@@ -5,7 +5,7 @@ import { adminRouter } from './routes/admin';
 import shopRouter from './routes/shop';
 import { get404Page } from './controllers/error';
 import { getYourPath } from './ultil/path';
-import { mongoConnected } from './ultil/database';
+import mongoose from 'mongoose';
 import User from './models/user';
 
 
@@ -32,9 +32,9 @@ app.use(get404Page);
 // Product.sequelize.sync({ force: true, logging: console.log })
 // setup relationship add one to many relationship
 
-
-(async()=> {
-	let client = await mongoConnected()
-	// console.log(client)
-	app.listen(3002);
-})()
+mongoose.connect('mongodb+srv://vietanhcao:sao14111@cluster0-iyrhv.mongodb.net/test?retryWrites=true&w=majority')
+	.then(result => {
+		app.listen(3002);
+	}).catch(error => {
+		console.log(error);
+	})
