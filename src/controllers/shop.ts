@@ -94,9 +94,7 @@ export const postCartDeleteProduct: RequestHandler = async (req:any, res, next) 
   
 }
 export const getOrders: RequestHandler = async (req:any, res, next) => {
-  let orders = await req.user.getOrders({
-    include: ['products'] //feching all order include products per order -- relation between order and product
-  });
+  let orders = await req.user.getOrders();
   res.render('shop/orders', {
     orders,
     pageTitle: 'Your Orders',

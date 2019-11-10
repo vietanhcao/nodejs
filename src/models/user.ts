@@ -76,9 +76,9 @@ class User {
     await db.collection('orders').insertOne(order);// create collection and insert
     return db.collection('users').updateOne({ _id: this._id }, { $set: { cart: { items: [] } } }) // clear cart
   }
-  getOrder = async() => {
+  getOrders = async() => {
     const db = getDb();
-    // db.collection('orders').find()
+    return db.collection('orders').find({'user._id': new ObjectId(this._id)}).toArray();
   }
   static findById = (id:string) =>{
     const db = getDb();
