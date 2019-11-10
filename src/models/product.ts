@@ -1,3 +1,24 @@
+import mongoose, { Schema }  from "mongoose";
+
+
+const productSchema = new Schema({
+  title: {
+    type:String,
+    required: true,
+  },
+  price: {
+    type: Number,
+    required: true
+  },
+  description: {
+    type: String,
+    required:true
+  },
+  imageUrl: {
+    type:String,
+    required: true
+  }
+});
 // import { getDb } from "../ultil/database";
 // import { ObjectID, ObjectId } from "mongodb";
 
@@ -54,4 +75,4 @@
 //   }
 // }
 
-// export default Product;
+export default mongoose.model('Product', productSchema);

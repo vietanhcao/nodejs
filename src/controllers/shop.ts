@@ -6,9 +6,10 @@ import Product from "../models/product";
 export const getProducts: RequestHandler = async (req, res, next) => {
   // res.sendFile(path.join(rootDir,'views','shop.html'))// not slash because on windown \ , linus use / dir
   try {
-    const Products = await Product.fetchAll();
+    // const Products = await Product.find().cursor().next();
+    const products = await Product.find();
     res.render('shop/product-list', {
-      prods: Products,
+      prods: products,
       pageTitle: 'All Product',
       path: '/products'
     });
@@ -20,9 +21,7 @@ export const getProducts: RequestHandler = async (req, res, next) => {
 export const getProduct: RequestHandler = async (req, res, next) => {
   try {
     const prodId = req.params.productId;
-    console.log(prodId)
     let product = await Product.findById(prodId); //return //vonly product
-    console.log(product)
     res.render('shop/product-detail', {
       product: product,
       pageTitle: 'Product-detail',
@@ -36,9 +35,9 @@ export const getProduct: RequestHandler = async (req, res, next) => {
 
 export const getIndex: RequestHandler = async (req, res, next) => {
   try {
-    const Products = await Product.fetchAll();
+    const products = await Product.find();
     res.render('shop/index', {
-      prods: Products,
+      prods: products,
       pageTitle: 'Shop',
       path: '/'
     });

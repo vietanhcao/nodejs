@@ -2,6 +2,11 @@ import { RequestHandler, Request } from "express";
 import Product from "../models/product";
 // import { Product } from '../models/product';
 import { ObjectID } from 'mongodb';
+import { Document } from "mongoose";
+
+interface DocumentAddProperty extends Document{
+  [key: string]: any
+}
 
 export const getAddProduct: RequestHandler = (req, res, next)  => {
   // next(); // allow request to next continue middleware  in liners
@@ -13,12 +18,8 @@ export const getAddProduct: RequestHandler = (req, res, next)  => {
 }
 export const postAddProduct: RequestHandler  = async (req: any, res, next) => {
   const { title, price,  description, imageUrl } = req.body;
-  const product = new Product(title, price, description, imageUrl, req.user._id);
+  const product = new Product({title: title, price, description, imageUrl});
   let dummy = await product.save();
-  // await req.user.createProduct({
-  //   title, imageUrl, description, price,
-  // });
-  // _product.push({ title: req.body.title })
   res.redirect('/');
 }
 export const getEditProduct: RequestHandler = async (req: any, res, next) => {
@@ -41,23 +42,27 @@ export const getEditProduct: RequestHandler = async (req: any, res, next) => {
   
 }
 export const postEditProduct: RequestHandler = async (req, res, next) => {
-  const { pordId, title, imageUrl, description, price } = req.body;
-  const _product = new Product(title, price, description, imageUrl, pordId )
-  await _product.save()
+  const { pordId, title, imageUrl, description, price  } = req.body;
+  let product: DocumentAddProperty = await Product.findById(pordId);
+  product.title = title;
+  product.imageUrl = imageUrl;
+  product.description = description;
+  product.price = price;
+  await product.save()
   res.redirect('/admin/products');
 }
 
 export const postDeleteProduct: RequestHandler = async (req:any, res, next) => {
   const { productId } = req.body;
   // Product.destroy({})
-  let product = await Product.deleteById(productId)
+  let product = await Product.findByIdAndRemove(productId)
 
   res.redirect('/admin/products');
 }
 
 
 export const getProducts: RequestHandler = async (req:any, res, next) => {
-  let products = await Product.fetchAll();
+  let products = await Product.find();
   res.render('admin/products', {
     prods: products,
     pageTitle: 'Admin Products',
