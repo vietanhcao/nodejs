@@ -1,3 +1,24 @@
+import mongoose,{ Schema } from "mongoose";
+
+const userSchema = new Schema({
+  name: {
+    type: String,
+    required:true
+  },
+  email: {
+    type: String,
+    required:true,
+  },
+  cart: {
+    items: [{productId: { 
+      type: Schema.Types.ObjectId,
+      ref: 'Product',
+      required: true
+    }, quantity: {type:Number, required: true}}],
+
+  }
+})
+export default mongoose.model('User', userSchema);
 // import { getDb } from "../ultil/database";
 // import { ObjectId } from 'mongodb';
 
@@ -86,4 +107,3 @@
 //   }
 // }
 
-// export default User;

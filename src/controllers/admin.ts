@@ -18,8 +18,10 @@ export const getAddProduct: RequestHandler = (req, res, next)  => {
 }
 export const postAddProduct: RequestHandler  = async (req: any, res, next) => {
   const { title, price,  description, imageUrl } = req.body;
-  const product = new Product({title: title, price, description, imageUrl});
-  let dummy = await product.save();
+  const product = new Product({title: title, price, description, imageUrl,
+    userId: req.user._id
+  });
+  await product.save();
   res.redirect('/');
 }
 export const getEditProduct: RequestHandler = async (req: any, res, next) => {
@@ -39,7 +41,7 @@ export const getEditProduct: RequestHandler = async (req: any, res, next) => {
     editing: editMode,
     product: product
   });
-  
+
 }
 export const postEditProduct: RequestHandler = async (req, res, next) => {
   const { pordId, title, imageUrl, description, price  } = req.body;

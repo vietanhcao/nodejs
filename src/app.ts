@@ -6,7 +6,7 @@ import shopRouter from './routes/shop';
 import { get404Page } from './controllers/error';
 import { getYourPath } from './ultil/path';
 import mongoose from 'mongoose';
-// import User from './models/user';
+import User from './models/user';
 
 
 const app = express();
@@ -18,11 +18,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // app.disable('etag');
 app.use(express.static(path.join(__dirname, 'public'))); //file css
 
-// app.use(async (req: any, res, next) => {
-// 	let user = await User.findById('5dc051910898360637d6418f');
-// 	req.user = new User(user.name,user.email, user.cart, user._id);
-// 	next();
-// });
+app.use(async (req: any, res, next) => {
+	let user = await User.findById('5dc93362cda16b33cce1f202');
+	req.user = user;
+	next();
+});
 
 // => rounter .....
 app.use('/admin', adminRouter);
@@ -33,7 +33,19 @@ app.use(get404Page);
 // setup relationship add one to many relationship
 
 mongoose.connect('mongodb+srv://vietanhcao:sao14111@cluster0-iyrhv.mongodb.net/shop?retryWrites=true&w=majority')
-	.then(result => {
+	.then(async(result) => {
+
+		let user = await User.findOne()
+		if (!user){
+			user = new User({
+				name: 'Max',
+				email: 'max@test.com',
+				cart: {
+					items: []
+				}
+			})
+		}
+		user.save();
 		app.listen(3002);
 	}).catch(error => {
 		console.log(error);
