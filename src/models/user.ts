@@ -1,5 +1,4 @@
 import mongoose,{ Schema } from "mongoose";
-
 const userSchema = new Schema({
   name: {
     type: String,
@@ -10,17 +9,37 @@ const userSchema = new Schema({
     required:true,
   },
   cart: {
-    items: [{productId: { 
-      type: Schema.Types.ObjectId,
-      ref: 'Product',
-      required: true
-    }, quantity: {type:Number, required: true}}],
-
+    items: [
+      {
+        productId: { 
+          type: Schema.Types.ObjectId,
+          ref: 'Product',
+          required: true
+        }, 
+        quantity: {type:Number, required: true}
+      }
+  ]}
+});
+userSchema.methods.addToCart = function (product){
+    const cartProductIndex = this.cart.items.findIndex(e => {
+      return e.productId.toString() === product._id.toString(); ///to stiing compare
+    });
+    const updateCartItem = [...this.cart.items];
+    let newQuantity = 1;
+    if (cartProductIndex >= 0){
+      newQuantity = this.cart.items[cartProductIndex].quantity + 1;
+      updateCartItem[cartProductIndex].quantity = newQuantity;
+    }else{
+      updateCartItem.push({ productId: product._id, quantity: newQuantity })
+    }
+    const updateCart = { items: updateCartItem}
+    this.cart = updateCart
+    return this.save()
   }
-})
 export default mongoose.model('User', userSchema);
 // import { getDb } from "../ultil/database";
 // import { ObjectId } from 'mongodb';
+
 
 // interface Cart {
 //   items: any[];

@@ -64,7 +64,10 @@ export const postDeleteProduct: RequestHandler = async (req:any, res, next) => {
 
 
 export const getProducts: RequestHandler = async (req:any, res, next) => {
-  let products = await Product.find();
+  let products = await Product.find()
+    // .select('title price -_id')//select poduct
+    // .populate('userId', 'name')// seclect inside userId (related)
+  console.log("TCL: getProducts:RequestHandler -> products", products)
   res.render('admin/products', {
     prods: products,
     pageTitle: 'Admin Products',
