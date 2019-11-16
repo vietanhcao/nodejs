@@ -12,15 +12,15 @@ shopRouter.get('/products', shopController.getProducts)
 
 shopRouter.get('/products/:productId', shopController.getProduct  );
 
-// shopRouter.get('/cart', shopController.getCart);
+shopRouter.get('/cart', shopController.getCart);
 
 shopRouter.post('/cart', shopController.postCart);
 
-// shopRouter.post('/cart-delete-item', shopController.postCartDeleteProduct);
+shopRouter.post('/cart-delete-item', shopController.postCartDeleteProduct);
 
-// shopRouter.get('/Orders', shopController.getOrders);
+shopRouter.get('/Orders', shopController.getOrders);
 
-// shopRouter.post('/create-order', shopController.postOrder);
+shopRouter.post('/create-order', shopController.postOrder);
 
 
 // shopRouter.get('/checkout', shopController.getCheckout);
