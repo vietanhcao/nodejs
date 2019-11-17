@@ -7,6 +7,7 @@ import { get404Page } from './controllers/error';
 import { getYourPath } from './ultil/path';
 import mongoose from 'mongoose';
 import User from './models/user';
+import authRouter from './routes/auth';
 
 
 const app = express();
@@ -26,7 +27,9 @@ app.use(async (req: any, res, next) => {
 
 // => rounter .....
 app.use('/admin', adminRouter);
-app.use(shopRouter);
+app.use(shopRouter); //every thing not found in shop will swich to authRouter
+
+app.use(authRouter);
 
 app.use(get404Page);
 // Product.sequelize.sync({ force: true, logging: console.log })

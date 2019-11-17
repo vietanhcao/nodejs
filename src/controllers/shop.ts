@@ -11,7 +11,8 @@ export const getProducts: RequestHandler = async (req, res, next) => {
 		res.render('shop/product-list', {
 			prods: products,
 			pageTitle: 'All Product',
-			path: '/products'
+			path: '/products',
+			isAuthenticated: (req as any).isLoginIn
 		});
 	} catch (error) {
 		console.log('get product', error);
@@ -25,7 +26,8 @@ export const getProduct: RequestHandler = async (req, res, next) => {
 		res.render('shop/product-detail', {
 			product: product,
 			pageTitle: 'Product-detail',
-			path: '/products'
+			path: '/products',
+			isAuthenticated: (req as any).isLoginIn
 		});
 	} catch (error) {
 		console.log('get product', error);
@@ -38,7 +40,8 @@ export const getIndex: RequestHandler = async (req, res, next) => {
 		res.render('shop/index', {
 			prods: products,
 			pageTitle: 'Shop',
-			path: '/'
+			path: '/',
+			isAuthenticated: (req as any).isLoginIn
 		});
 	} catch (error) {
 		console.log('get product', error);
@@ -53,7 +56,8 @@ export const getCart: RequestHandler = async (req: any, res, next) => {
 	res.render('shop/cart', {
 		products: products,
 		pageTitle: 'Your Cart',
-		path: '/cart'
+		path: '/cart',
+		isAuthenticated: (req as any).isLoginIn
 	});
 };
 export const postCart: RequestHandler = async (req: any, res, next) => {
@@ -72,7 +76,8 @@ export const getOrders: RequestHandler = async (req: any, res, next) => {
 	res.render('shop/orders', {
 		orders,
 		pageTitle: 'Your Orders',
-		path: '/orders'
+		path: '/orders',
+		isAuthenticated: (req as any).isLoginIn
 	});
 };
 export const postOrder: RequestHandler = async (req: any, res, next) => {

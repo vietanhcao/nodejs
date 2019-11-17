@@ -1,7 +1,5 @@
 import { RequestHandler, Request } from "express";
 import Product from "../models/product";
-// import { Product } from '../models/product';
-import { ObjectID } from 'mongodb';
 import { Document } from "mongoose";
 
 interface DocumentAddProperty extends Document{
@@ -13,7 +11,8 @@ export const getAddProduct: RequestHandler = (req, res, next)  => {
   // console.log(rootDir)
   res.render('admin/edit-product', {
     pageTitle: "Add Product",
-    path: '/admin/add-product'
+    path: '/admin/add-product',
+    isAuthenticated: (req as any).isLoginIn
   });
 }
 export const postAddProduct: RequestHandler  = async (req: any, res, next) => {
@@ -39,7 +38,8 @@ export const getEditProduct: RequestHandler = async (req: any, res, next) => {
     pageTitle: "Edit Product",
     path: '/admin/edit-product',
     editing: editMode,
-    product: product
+    product: product,
+    isAuthenticated: (req as any).isLoginIn
   });
 
 }
@@ -71,6 +71,7 @@ export const getProducts: RequestHandler = async (req:any, res, next) => {
   res.render('admin/products', {
     prods: products,
     pageTitle: 'Admin Products',
-    path: '/admin/products'
+    path: '/admin/products',
+    isAuthenticated: (req as any).isLoginIn
   })
 }
