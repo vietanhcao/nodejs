@@ -8,7 +8,7 @@ import { getYourPath } from './ultil/path';
 import mongoose from 'mongoose';
 import User from './models/user';
 import authRouter from './routes/auth';
-
+import session from 'express-session';
 
 const app = express();
 
@@ -19,6 +19,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // app.disable('etag');
 app.use(express.static(path.join(__dirname, 'public'))); //file css
 
+app.use(session({secret: 'my secret', resave: false, saveUninitialized: false}))
 app.use(async (req: any, res, next) => {
 	let user = await User.findById('5dc93362cda16b33cce1f202');
 	req.user = user;
@@ -34,6 +35,7 @@ app.use(authRouter);
 app.use(get404Page);
 // Product.sequelize.sync({ force: true, logging: console.log })
 // setup relationship add one to many relationship
+
 
 mongoose.connect('mongodb+srv://vietanhcao:sao14111@cluster0-iyrhv.mongodb.net/shop?retryWrites=true&w=majority')
 	.then(async(result) => {

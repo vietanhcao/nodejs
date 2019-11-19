@@ -18,6 +18,6 @@ export const getLogin: RequestHandler = async (req,res,next) => {
 };
 
 export const postLogin: RequestHandler = async (req,res,next) => {
-  res.setHeader('Set-Cookie','loggedIn=true');
+  res.setHeader('Set-Cookie','loggedIn=true; Max-Age=100; HttpOnly');
   res.redirect('/');
 };

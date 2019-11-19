@@ -68,6 +68,7 @@ export const getProducts: RequestHandler = async (req:any, res, next) => {
     // .select('title price -_id')//select poduct
     // .populate('userId', 'name')// seclect inside userId (related)
   console.log("TCL: getProducts:RequestHandler -> products", products)
+  console.trace("TCL: getProducts:RequestHandler -> products", products)
   res.render('admin/products', {
     prods: products,
     pageTitle: 'Admin Products',
