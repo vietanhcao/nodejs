@@ -9,8 +9,16 @@ import mongoose from 'mongoose';
 import User from './models/user';
 import authRouter from './routes/auth';
 import session from 'express-session';
+import connect from 'connect-mongodb-session';
+const MongoDBStore = connect(session);
+
+const MONGODB_URL = 'mongodb+srv://vietanhcao:sao14111@cluster0-iyrhv.mongodb.net/shop?retryWrites=true&w=majority';
 
 const app = express();
+const store = new MongoDBStore({
+	uri: MONGODB_URL,
+	collection: 'sesstions'
+});
 
 app.set('view engine', 'pug');
 app.set('views', getYourPath + '/views');
@@ -19,7 +27,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // app.disable('etag');
 app.use(express.static(path.join(__dirname, 'public'))); //file css
 
-app.use(session({secret: 'my secret', resave: false, saveUninitialized: false}))
+app.use(session({ secret: 'my secret', resave: false, saveUninitialized: false, store: store }));
 app.use(async (req: any, res, next) => {
 	let user = await User.findById('5dc93362cda16b33cce1f202');
 	req.user = user;
@@ -36,22 +44,22 @@ app.use(get404Page);
 // Product.sequelize.sync({ force: true, logging: console.log })
 // setup relationship add one to many relationship
 
-
-mongoose.connect('mongodb+srv://vietanhcao:sao14111@cluster0-iyrhv.mongodb.net/shop?retryWrites=true&w=majority')
-	.then(async(result) => {
-
-		let user = await User.findOne()
-		if (!user){
+mongoose
+	.connect(MONGODB_URL)
+	.then(async (result) => {
+		let user = await User.findOne();
+		if (!user) {
 			user = new User({
 				name: 'Max',
 				email: 'max@test.com',
 				cart: {
 					items: []
 				}
-			})
+			});
 		}
 		user.save();
 		app.listen(3002);
-	}).catch(error => {
-		console.log(error);
 	})
+	.catch((error) => {
+		console.log(error);
+	});
