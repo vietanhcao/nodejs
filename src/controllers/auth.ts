@@ -21,7 +21,12 @@ export const postLogin: RequestHandler = async (req,res,next) => {
 	let user = await User.findById('5dc93362cda16b33cce1f202');
 	req.session.user = user;
 	req.session.isLoggedIn = true;
-	res.redirect('/');
+	req.session.save((err) => { // sometimes  store session in mongodb take miliseconds do that can be sure session has been create been 
+		if (err) {
+			console.log("TCL: postLogin:RequestHandler -> err",err)
+		}
+		res.redirect('/');
+	})
 };
 export const postLogout: RequestHandler = async (req,res,next) => {
 	req.session.destroy((error) => {
