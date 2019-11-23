@@ -21,8 +21,12 @@ html(lang="en")
             li.main-header__item
               a(href="/admin/products", class=( path==='/admin/products' ? 'active' : '' )) Admin Products
         ul.main-header__item-list
-          .main-header__item
+          li.main-header__item
             a(href="/login", class=( path === '/login' ? 'active' : '' )) Login
+          li.main-header__item
+            form(action="/logout", method="post")
+              button(type="submit") Logout
+          
     nav.mobile-nav
         ul.mobile-nav__item-list
           li.mobile-nav__item

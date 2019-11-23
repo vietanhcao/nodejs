@@ -20,24 +20,27 @@ const store = new MongoDBStore({
 	collection: 'sesstions'
 });
 
-app.set('view engine', 'pug');
-app.set('views', getYourPath + '/views');
+app.set('view engine','pug');
+app.set('views',getYourPath + '/views');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 // app.disable('etag');
-app.use(express.static(path.join(__dirname, 'public'))); //file css
+app.use(express.static(path.join(__dirname,'public'))); //file css
+app.use(
+	session(
+		{
+			secret: 'my secret',
+			resave: false,
+			saveUninitialized: false,
+			store: store
+		}
+	)
+);
 
-app.use(session({ secret: 'my secret', resave: false, saveUninitialized: false, store: store }));
-app.use(async (req: any, res, next) => {
-	let user = await User.findById('5dc93362cda16b33cce1f202');
-	req.user = user;
-	next();
-});
 
 // => rounter .....
-app.use('/admin', adminRouter);
+app.use('/admin',adminRouter);
 app.use(shopRouter); //every thing not found in shop will swich to authRouter
-
 app.use(authRouter);
 
 app.use(get404Page);
