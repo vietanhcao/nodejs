@@ -37,6 +37,16 @@ app.use(
 	)
 );
 
+app.use(async (req,res,next) => {
+	if (!req.session.user) {
+		return next();
+	}
+	let user = await User.findById(req.session.user._id);
+	(req as any).user = user;
+
+	next();
+})
+
 
 // => rounter .....
 app.use('/admin',adminRouter);

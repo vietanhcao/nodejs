@@ -47,8 +47,8 @@ export const getIndex: RequestHandler = async (req,res,next) => {
 		console.log('get product',error);
 	}
 };
-export const getCart: RequestHandler = async (req,res,next) => {
-	let user = await req.session.user
+export const getCart: RequestHandler = async (req:any,res,next) => {
+	let user = await req.user
 		.populate('cart.items.productId') //'cart.items.productId' => execute get data ref
 		.execPopulate(); // wrap promise and excecuted
 	let products = user.cart.items;
@@ -63,16 +63,16 @@ export const getCart: RequestHandler = async (req,res,next) => {
 export const postCart: RequestHandler = async (req: any,res,next) => {
 	const { productId } = req.body;
 	let product = await Product.findById(productId);
-	await req.session.user.addToCart(product);
+	await req.user.addToCart(product);
 	res.redirect('/cart');
 };
 export const postCartDeleteProduct: RequestHandler = async (req: any,res,next) => {
 	const { productId } = req.body;
-	await req.session.user.deleteItemFromCart(productId);
+	await req.user.deleteItemFromCart(productId);
 	res.redirect('/cart');
 };
 export const getOrders: RequestHandler = async (req: any,res,next) => {
-	let orders: any = await Order.find({ 'user.userId': req.session.user._id });
+	let orders: any = await Order.find({ 'user.userId': req.user._id });
 	res.render('shop/orders',{
 		orders,
 		pageTitle: 'Your Orders',
@@ -81,7 +81,7 @@ export const getOrders: RequestHandler = async (req: any,res,next) => {
 	});
 };
 export const postOrder: RequestHandler = async (req: any,res,next) => {
-	let user = await req.session.user
+	let user = await req.user
 		.populate('cart.items.productId') //'cart.items.productId' => execute get data ref
 		.execPopulate(); // wrap promise and excecuted
 	let products = user.cart.items;
@@ -91,12 +91,12 @@ export const postOrder: RequestHandler = async (req: any,res,next) => {
 	const order = new Order({
 		products: products,
 		user: {
-			userId: req.session.user, //mogoose pick id there
-			name: req.session.user.name
+			userId: req.user, //mogoose pick id there
+			name: req.user.name
 		}
 	});
 	await order.save();
-	await req.session.user.clearCart();
+	await req.user.clearCart();
 	res.redirect('/orders');
 };
 

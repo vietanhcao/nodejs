@@ -22,7 +22,7 @@ export const postAddProduct: RequestHandler = async (req: any,res,next) => {
     price,
     description,
     imageUrl,
-    userId: req.session.user._id
+    userId: req.user._id
   });
   await product.save();
   res.redirect('/');
