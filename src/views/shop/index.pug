@@ -12,7 +12,8 @@ block content
               .card__content
                   h2.product__price #{product.price}
                   p.product__description #{product.description}
-              .card__actions
-                include ../includes/add-to-card.pug
+              if isAuthenticated
+                .card__actions
+                  include ../includes/add-to-card.pug
       else
           h1 No Products

@@ -14,6 +14,7 @@ block content
                 p.product__description #{product.description}
               .card__actions
                 a(href=("/products/" + product._id) class="btn") Detail
-                include ../includes/add-to-card.pug
+                if isAuthenticated
+                  include ../includes/add-to-card.pug
       else
           h1 No Products
