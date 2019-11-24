@@ -13,7 +13,7 @@ export const getLogin: RequestHandler = async (req,res,next) => {
 		// orders,
 		pageTitle: 'Login',
 		path: '/login',
-		isAuthenticated: req.session.isLoggedIn
+		isAuthenticated: false
 	});
 };
 
@@ -27,6 +27,17 @@ export const postLogin: RequestHandler = async (req,res,next) => {
 		}
 		res.redirect('/');
 	})
+};
+export const getSignup: RequestHandler = async (req,res,next) => {
+	res.render('auth/signup',{
+		pageTitle: 'Signup',
+		path: '/signup',
+		isAuthenticated: false
+	});
+};
+
+export const postSignup: RequestHandler = async (req,res,next) => {
+
 };
 export const postLogout: RequestHandler = async (req,res,next) => {
 	req.session.destroy((error) => {
