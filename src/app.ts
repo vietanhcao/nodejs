@@ -60,17 +60,6 @@ app.use(get404Page);
 mongoose
 	.connect(MONGODB_URL)
 	.then(async (result) => {
-		let user = await User.findOne();
-		if (!user) {
-			user = new User({
-				name: 'Max',
-				email: 'max@test.com',
-				cart: {
-					items: []
-				}
-			});
-		}
-		user.save();
 		app.listen(3002);
 	})
 	.catch((error) => {
