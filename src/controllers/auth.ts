@@ -19,7 +19,16 @@ export const getLogin: RequestHandler = async (req, res, next) => {
 };
 
 export const postLogin: RequestHandler = async (req, res, next) => {
-	let user = await User.findById('5dc93362cda16b33cce1f202');
+	const { email, password } = req.body;
+
+	let user = await User.findOne({ email: email });
+	if(!user){
+		return res.redirect('/login');
+	}
+	const doMatch= await bcrypt.compare(password, (user as any).password);
+	if(!doMatch){
+		return res.redirect('/login');
+	}
 	req.session.user = user;
 	req.session.isLoggedIn = true;
 	req.session.save((err) => {
@@ -40,19 +49,18 @@ export const getSignup: RequestHandler = async (req, res, next) => {
 
 export const postSignup: RequestHandler = async (req, res, next) => {
 	const { email, password, comfirmPassword } = req.body;
-	let userDoc = await User.findOne({email: email});
-	if(userDoc){
+	let userDoc = await User.findOne({ email: email });
+	if (userDoc) {
 		return res.redirect('/signup');
 	}
-	const hashPassword =  await bcrypt.hash(password,12);
+	const hashPassword = await bcrypt.hash(password, 12);
 	const user = new User({
-		email:email,
+		email: email,
 		password: hashPassword,
-		cart: {items: []}
-	})
+		cart: { items: [] }
+	});
 	await user.save();
 	res.redirect('/login');
-
 };
 export const postLogout: RequestHandler = async (req, res, next) => {
 	req.session.destroy((error) => {
