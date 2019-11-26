@@ -29,6 +29,7 @@ html(lang="en")
           else
             li.main-header__item
               form(action="/logout", method="post")
+                input(type="hidden", name="_csrf", value=csrfToken)
                 button(type="submit") Logout
           
     nav.mobile-nav
@@ -54,6 +55,7 @@ html(lang="en")
           else
             li.mobile-nav__item
               form(action="/logout", method="post")
+                input(type="hidden", name="_csrf", value=csrfToken)
                 button(type="submit") Logout
     block content
     script(src="/js/main.js")

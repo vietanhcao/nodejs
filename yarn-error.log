@@ -1,5 +1,5 @@
 Arguments: 
-  /Users/caovietanh/.nvm/versions/node/v12.4.0/bin/node /usr/local/Cellar/yarn/1.19.1/libexec/bin/yarn.js add @typebcryptjs
+  /Users/caovietanh/.nvm/versions/node/v12.4.0/bin/node /usr/local/Cellar/yarn/1.19.1/libexec/bin/yarn.js add csuf
 
 PATH: 
   /Users/caovietanh/.nvm/versions/node/v12.4.0/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/caovietanh/.nvm/versions/node/v12.4.0/bin
@@ -14,8 +14,8 @@ Platform:
   darwin x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@typebcryptjs: Request "https://registry.yarnpkg.com/@typebcryptjs" returned a 405
-      at Request.params.callback [as _callback] (/usr/local/Cellar/yarn/1.19.1/libexec/lib/cli.js:66935:18)
+  Error: https://registry.yarnpkg.com/csuf: Not found
+      at Request.params.callback [as _callback] (/usr/local/Cellar/yarn/1.19.1/libexec/lib/cli.js:66926:18)
       at Request.self.callback (/usr/local/Cellar/yarn/1.19.1/libexec/lib/cli.js:140564:22)
       at Request.emit (events.js:200:13)
       at Request.<anonymous> (/usr/local/Cellar/yarn/1.19.1/libexec/lib/cli.js:141536:10)
@@ -51,6 +51,7 @@ npm manifest:
     "author": "vietanhcao <vietanhcao1994@gmail.com>",
     "license": "MIT",
     "devDependencies": {
+      "@types/bcryptjs": "^2.4.2",
       "@types/connect-mongodb-session": "^0.0.2",
       "@types/express": "^4.17.1",
       "@types/express-session": "^1.15.16",
@@ -82,6 +83,11 @@ Lockfile:
     integrity sha512-xH2e58elpj1X4ynnKp9qSnWlsRTIs6n3tgLGNfwAGHwePw0mulHQllV34n0T25uYSu1k0hRKkWXF890B1yS47w==
     dependencies:
       "@types/babel-types" "*"
+  
+  "@types/bcryptjs@^2.4.2":
+    version "2.4.2"
+    resolved "https://registry.yarnpkg.com/@types/bcryptjs/-/bcryptjs-2.4.2.tgz#e3530eac9dd136bfdfb0e43df2c4c5ce1f77dfae"
+    integrity sha512-LiMQ6EOPob/4yUL66SZzu6Yh77cbzJFYll+ZfaPiPPFswtIlA/Fs1MzdKYA7JApHU49zQTbJGX3PDmCpIdDBRQ==
   
   "@types/bluebird@*":
     version "3.5.28"

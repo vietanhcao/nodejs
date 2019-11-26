@@ -22,11 +22,11 @@ export const postLogin: RequestHandler = async (req, res, next) => {
 	const { email, password } = req.body;
 
 	let user = await User.findOne({ email: email });
-	if(!user){
+	if (!user) {
 		return res.redirect('/login');
 	}
-	const doMatch= await bcrypt.compare(password, (user as any).password);
-	if(!doMatch){
+	const doMatch = await bcrypt.compare(password, (user as any).password);
+	if (!doMatch) {
 		return res.redirect('/login');
 	}
 	req.session.user = user;

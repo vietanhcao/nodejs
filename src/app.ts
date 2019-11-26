@@ -10,6 +10,9 @@ import User from './models/user';
 import authRouter from './routes/auth';
 import session from 'express-session';
 import connect from 'connect-mongodb-session';
+import csurf from 'csurf';
+
+const csurfProtection = csurf();
 const MongoDBStore = connect(session);
 
 const MONGODB_URL = 'mongodb+srv://vietanhcao:sao14111@cluster0-iyrhv.mongodb.net/shop?retryWrites=true&w=majority';
@@ -20,24 +23,22 @@ const store = new MongoDBStore({
 	collection: 'sesstions'
 });
 
-app.set('view engine','pug');
-app.set('views',getYourPath + '/views');
+app.set('view engine', 'pug');
+app.set('views', getYourPath + '/views');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 // app.disable('etag');
-app.use(express.static(path.join(__dirname,'public'))); //file css
+app.use(express.static(path.join(__dirname, 'public'))); //file css
 app.use(
-	session(
-		{
-			secret: 'my secret',
-			resave: false,
-			saveUninitialized: false,
-			store: store
-		}
-	)
+	session({
+		secret: 'my secret',
+		resave: false,
+		saveUninitialized: false,
+		store: store
+	})
 );
-
-app.use(async (req,res,next) => {
+app.use(csurfProtection);
+app.use(async (req, res, next) => {
 	if (!req.session.user) {
 		return next();
 	}
@@ -45,11 +46,16 @@ app.use(async (req,res,next) => {
 	(req as any).user = user;
 
 	next();
-})
+});
 
+app.use((req, res, next) => {
+	res.locals.isAuthenticated = req.session.isLoggedIn;
+	res.locals.csrfToken = req.csrfToken();
+	next();
+});
 
 // => rounter .....
-app.use('/admin',adminRouter);
+app.use('/admin', adminRouter);
 app.use(shopRouter); //every thing not found in shop will swich to authRouter
 app.use(authRouter);
 
