@@ -40,9 +40,9 @@ export const getIndex: RequestHandler = async (req, res, next) => {
 		res.render('shop/index', {
 			prods: products,
 			pageTitle: 'Shop',
-			path: '/',
-			isAuthenticated: req.session.isLoggedIn,
-			csrfToken: req.csrfToken()
+			path: '/'
+			// isAuthenticated: req.session.isLoggedIn
+			// csrfToken: req.csrfToken()
 		});
 	} catch (error) {
 		console.log('get product', error);
@@ -82,23 +82,27 @@ export const getOrders: RequestHandler = async (req: any, res, next) => {
 	});
 };
 export const postOrder: RequestHandler = async (req: any, res, next) => {
-	let user = await req.user
-		.populate('cart.items.productId') //'cart.items.productId' => execute get data ref
-		.execPopulate(); // wrap promise and excecuted
-	let products = user.cart.items;
-	products = products.map((o) => {
-		return { product: { ...o.productId._doc }, quantity: o.quantity }; //_doc get all data
-	});
-	const order = new Order({
-		products: products,
-		user: {
-			userId: req.user, //mogoose pick id there
-			name: req.user.name
-		}
-	});
-	await order.save();
-	await req.user.clearCart();
-	res.redirect('/orders');
+	try {
+		let user = await req.user
+			.populate('cart.items.productId') //'cart.items.productId' => execute get data ref
+			.execPopulate(); // wrap promise and excecuted
+		let products = user.cart.items;
+		products = products.map((o) => {
+			return { product: { ...o.productId._doc }, quantity: o.quantity }; //_doc get all data
+		});
+		const order = new Order({
+			products: products,
+			user: {
+				userId: req.user, //mogoose pick id there
+				email: req.user.email
+			}
+		});
+		await order.save();
+		await req.user.clearCart();
+		res.redirect('/orders');
+	} catch (error) {
+		console.log(error);
+	}
 };
 
 // export const adminData = _product;

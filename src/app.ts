@@ -49,7 +49,7 @@ app.use(async (req, res, next) => {
 });
 
 app.use((req, res, next) => {
-	res.locals.isAuthenticated = req.session.isLoggedIn;
+	res.locals.isAuthenticated = req.session.isLoggedIn; //You are passing the  object into the pug template
 	res.locals.csrfToken = req.csrfToken();
 	next();
 });
