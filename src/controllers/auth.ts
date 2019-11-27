@@ -9,12 +9,18 @@ export const getLogin: RequestHandler = async (req, res, next) => {
 	// if (regex.test(dataCookie)){
 	//   isLoggedIn = JSON.parse(dataCookie.split('loggedIn=')[1]) //convert to boolean
 	// }
-	console.log(req.session.isLoggedIn);
 	res.render('auth/login', {
 		// orders,
 		pageTitle: 'Login',
 		path: '/login',
-		isAuthenticated: false
+		errorMessage: req.flash('error')
+	});
+};
+
+export const getSignup: RequestHandler = async (req, res, next) => {
+	res.render('auth/signup', {
+		pageTitle: 'Signup',
+		path: '/signup'
 	});
 };
 
@@ -23,6 +29,7 @@ export const postLogin: RequestHandler = async (req, res, next) => {
 
 	let user = await User.findOne({ email: email });
 	if (!user) {
+		req.flash('error', 'invalid email or password');
 		return res.redirect('/login');
 	}
 	const doMatch = await bcrypt.compare(password, (user as any).password);
@@ -37,13 +44,6 @@ export const postLogin: RequestHandler = async (req, res, next) => {
 			console.log('TCL: postLogin:RequestHandler -> err', err);
 		}
 		res.redirect('/');
-	});
-};
-export const getSignup: RequestHandler = async (req, res, next) => {
-	res.render('auth/signup', {
-		pageTitle: 'Signup',
-		path: '/signup',
-		isAuthenticated: false
 	});
 };
 

@@ -11,8 +11,7 @@ export const getProducts: RequestHandler = async (req, res, next) => {
 		res.render('shop/product-list', {
 			prods: products,
 			pageTitle: 'All Product',
-			path: '/products',
-			isAuthenticated: req.session.isLoggedIn
+			path: '/products'
 		});
 	} catch (error) {
 		console.log('get product', error);
@@ -26,8 +25,7 @@ export const getProduct: RequestHandler = async (req, res, next) => {
 		res.render('shop/product-detail', {
 			product: product,
 			pageTitle: 'Product-detail',
-			path: '/products',
-			isAuthenticated: req.session.isLoggedIn
+			path: '/products'
 		});
 	} catch (error) {
 		console.log('get product', error);
@@ -41,7 +39,7 @@ export const getIndex: RequestHandler = async (req, res, next) => {
 			prods: products,
 			pageTitle: 'Shop',
 			path: '/'
-			// isAuthenticated: req.session.isLoggedIn
+			//
 			// csrfToken: req.csrfToken()
 		});
 	} catch (error) {
@@ -57,8 +55,7 @@ export const getCart: RequestHandler = async (req: any, res, next) => {
 	res.render('shop/cart', {
 		products: products,
 		pageTitle: 'Your Cart',
-		path: '/cart',
-		isAuthenticated: req.session.isLoggedIn
+		path: '/cart'
 	});
 };
 export const postCart: RequestHandler = async (req: any, res, next) => {
@@ -77,8 +74,7 @@ export const getOrders: RequestHandler = async (req: any, res, next) => {
 	res.render('shop/orders', {
 		orders,
 		pageTitle: 'Your Orders',
-		path: '/orders',
-		isAuthenticated: req.session.isLoggedIn
+		path: '/orders'
 	});
 };
 export const postOrder: RequestHandler = async (req: any, res, next) => {

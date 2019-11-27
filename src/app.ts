@@ -11,6 +11,7 @@ import authRouter from './routes/auth';
 import session from 'express-session';
 import connect from 'connect-mongodb-session';
 import csurf from 'csurf';
+import flash from 'connect-flash';
 
 const csurfProtection = csurf();
 const MongoDBStore = connect(session);
@@ -38,6 +39,8 @@ app.use(
 	})
 );
 app.use(csurfProtection);
+app.use(flash());
+
 app.use(async (req, res, next) => {
 	if (!req.session.user) {
 		return next();
