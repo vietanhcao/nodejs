@@ -2,6 +2,18 @@ import { RequestHandler } from 'express';
 import User from '../models/user';
 import bcrypt from 'bcryptjs';
 
+import nodemailer from 'nodemailer';
+import sendgridTransport from 'nodemailer-sendgrid-transport';
+// const sendgridTransport = require('nodemailer-sendgrid-transport');
+
+const transporter = nodemailer.createTransport(
+	sendgridTransport({
+		auth: {
+			api_key: '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'
+		}
+	})
+);
+
 export const getLogin: RequestHandler = async (req, res, next) => {
 	let message = req.flash('error');
 	if (message.length > 0) {
@@ -70,6 +82,12 @@ export const postSignup: RequestHandler = async (req, res, next) => {
 	});
 	await user.save();
 	res.redirect('/login');
+	await transporter.sendMail({
+		to: email,
+		from: 'shop@node-complete.com',
+		subject: 'signup succeeded!',
+		html: '<h1> You successfully signup! </h1>'
+	});
 };
 export const postLogout: RequestHandler = async (req, res, next) => {
 	req.session.destroy((error) => {
