@@ -3,24 +3,31 @@ import User from '../models/user';
 import bcrypt from 'bcryptjs';
 
 export const getLogin: RequestHandler = async (req, res, next) => {
-	// const dataCookie = req.get('Cookie');
-	// const regex = /loggedIn=/g;
-	// let isLoggedIn: Boolean = false;
-	// if (regex.test(dataCookie)){
-	//   isLoggedIn = JSON.parse(dataCookie.split('loggedIn=')[1]) //convert to boolean
-	// }
+	let message = req.flash('error');
+	if (message.length > 0) {
+		message = message[0];
+	} else {
+		message = null;
+	}
 	res.render('auth/login', {
 		// orders,
 		pageTitle: 'Login',
 		path: '/login',
-		errorMessage: req.flash('error')
+		errorMessage: message
 	});
 };
 
 export const getSignup: RequestHandler = async (req, res, next) => {
+	let message = req.flash('error');
+	if (message.length > 0) {
+		message = message[0];
+	} else {
+		message = null;
+	}
 	res.render('auth/signup', {
 		pageTitle: 'Signup',
-		path: '/signup'
+		path: '/signup',
+		errorMessage: message
 	});
 };
 
@@ -34,6 +41,7 @@ export const postLogin: RequestHandler = async (req, res, next) => {
 	}
 	const doMatch = await bcrypt.compare(password, (user as any).password);
 	if (!doMatch) {
+		req.flash('error', 'invalid email or password');
 		return res.redirect('/login');
 	}
 	req.session.user = user;
@@ -51,6 +59,7 @@ export const postSignup: RequestHandler = async (req, res, next) => {
 	const { email, password, comfirmPassword } = req.body;
 	let userDoc = await User.findOne({ email: email });
 	if (userDoc) {
+		req.flash('error', 'E-mail exists already, please  pick  a different one');
 		return res.redirect('/signup');
 	}
 	const hashPassword = await bcrypt.hash(password, 12);
