@@ -1,6 +1,7 @@
 import { RequestHandler } from 'express';
 import User from '../models/user';
 import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
 
 import nodemailer from 'nodemailer';
 import sendgridTransport from 'nodemailer-sendgrid-transport';
@@ -93,5 +94,48 @@ export const postLogout: RequestHandler = async (req, res, next) => {
 	req.session.destroy((error) => {
 		console.log('TCL: postLogout:RequestHandler -> error', error);
 		res.redirect('/');
+	});
+};
+
+export const getReset: RequestHandler = async (req, res, next) => {
+	let message = req.flash('error');
+	if (message.length > 0) {
+		message = message[0];
+	} else {
+		message = null;
+	}
+	res.render('auth/reset', {
+		pageTitle: 'Reset',
+		path: '/reset',
+		errorMessage: message
+	});
+};
+
+export const postReset: RequestHandler = async (req, res, next) => {
+	const { email } = req.body;
+
+	crypto.randomBytes(32, async (err, buffer) => {
+		if (err) {
+			return res.redirect('/reset');
+		}
+		const token = buffer.toString('hex');
+		let userDoc = await User.findOne({ email: email });
+		if (!userDoc) {
+			req.flash('error', 'No account with that email found.');
+			return res.redirect('/reset');
+		}
+		(userDoc as any).resetToken = token;
+		(userDoc as any).resetTokenExpiration = Date.now() + 3600000;
+		await userDoc.save();
+		res.redirect('/');
+		await transporter.sendMail({
+			to: email,
+			from: 'shop@node-complete.com',
+			subject: 'Password reset',
+			html: `
+					<p>You requested a password reset </p>
+					<p>Click this   <a href="http:localhost:3002/reset/${token}"> link </a> to set a new password. </p> 
+			`
+		});
 	});
 };

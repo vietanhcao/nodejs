@@ -8,6 +8,8 @@ const userSchema = new Schema({
 		type: String,
 		required: true
 	},
+	resetToken: String,
+	resetTokenExpiration: Date,
 	cart: {
 		items: [
 			{
@@ -38,18 +40,18 @@ userSchema.methods.addToCart = function(product) {
 	return this.save();
 };
 
-userSchema.methods.deleteItemFromCart = function (productId) {
-  let updatedCartItems = this.cart.items.filter(o => {
-    return o.productId.toString() !== productId.toString()
-  })
-  this.cart.items = updatedCartItems;
-  return this.save();
-}
+userSchema.methods.deleteItemFromCart = function(productId) {
+	let updatedCartItems = this.cart.items.filter((o) => {
+		return o.productId.toString() !== productId.toString();
+	});
+	this.cart.items = updatedCartItems;
+	return this.save();
+};
 
-userSchema.methods.clearCart = async function () {
-  this.cart.items = [];
-  return  this.save()
-}
+userSchema.methods.clearCart = async function() {
+	this.cart.items = [];
+	return this.save();
+};
 export default mongoose.model('User', userSchema);
 // import { getDb } from "../ultil/database";
 // import { ObjectId } from 'mongodb';
