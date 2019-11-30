@@ -69,7 +69,6 @@ export const postLogin: RequestHandler = async (req, res, next) => {
 	req.session.save((err) => {
 		// sometimes  store session in mongodb take miliseconds do that can be sure session has been create been
 		if (err) {
-			console.log('TCL: postLogin:RequestHandler -> err', err);
 		}
 		res.redirect('/');
 	});
@@ -99,7 +98,6 @@ export const postSignup: RequestHandler = async (req, res, next) => {
 };
 export const postLogout: RequestHandler = async (req, res, next) => {
 	req.session.destroy((error) => {
-		console.log('TCL: postLogout:RequestHandler -> error', error);
 		res.redirect('/');
 	});
 };
@@ -145,4 +143,38 @@ export const postReset: RequestHandler = async (req, res, next) => {
 			`
 		});
 	});
+};
+
+export const getNewPassword: RequestHandler = async (req, res, next) => {
+	const token = req.params.token;
+	let user = await User.findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } }); // gt => greater than
+	if (user) {
+		let message = req.flash('error');
+		if (message.length > 0) {
+			message = message[0];
+		} else {
+			message = null;
+		}
+		res.render('auth/new-password', {
+			pageTitle: 'New Password',
+			path: '/new-password',
+			errorMessage: message,
+			userId: user._id.toString(),
+			passwordToken: token
+		});
+	}
+};
+export const postNewPassword: RequestHandler = async (req, res, next) => {
+	const { password: newPassowrd, userId, passwordToken } = req.body;
+	let restUser = await User.findOne({
+		resetToken: passwordToken,
+		resetTokenExpiration: { $gt: Date.now() },
+		_id: userId
+	});
+	let hashedPassword = await bcrypt.hash(newPassowrd, 12);
+	(restUser as any).password = hashedPassword;
+	(restUser as any).resetToken = undefined;
+	(restUser as any).resetTokenExpiration = undefined;
+	await restUser.save();
+	res.redirect('/login');
 };
