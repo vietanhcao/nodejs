@@ -4,16 +4,16 @@ block styles
   link(rel="stylesheet", href="/css/auth.css")
 block content
   main
-      if errorMessage
-        .user-message.user-message--error #{errorMessage}
-      form.login-form(action=("/login"), method="POST") 
-        .form-control
-          label(for="email")  E-mail
-          input(type="email", name="email")#email
-        .form-control
-          label(for="password") Password
-          input(type="password", name="password")#password
-        input(type="hidden", name="_csrf", value=csrfToken)
-        button.btn(type="submit") Login 
-      .centered
-        a(href="/reset") Reset Password
+    if errorMessage
+      .user-message.user-message--error #{errorMessage}
+    form.login-form(action=("/login"), method="POST") 
+      .form-control
+        label(for="email")  E-mail
+        input(type="email", name="email")#email
+      .form-control
+        label(for="password") Password
+        input(type="password", name="password")#password
+      input(type="hidden", name="_csrf", value=csrfToken)
+      button.btn(type="submit") Login 
+    .centered
+      a(href="/reset") Reset Password

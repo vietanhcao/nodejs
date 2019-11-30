@@ -8,11 +8,18 @@ import sendgridTransport from 'nodemailer-sendgrid-transport';
 // const sendgridTransport = require('nodemailer-sendgrid-transport');
 
 const transporter = nodemailer.createTransport(
-	sendgridTransport({
+	// sendgridTransport({
+	// 	auth: {
+	// 		api_key: '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'
+	// 	}
+	// })
+	{
+		service: 'gmail',
 		auth: {
-			api_key: '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'
+			user: 'vietanhcao1994@gmail.com',
+			pass: 'sao14111'
 		}
-	})
+	}
 );
 
 export const getLogin: RequestHandler = async (req, res, next) => {
@@ -130,11 +137,11 @@ export const postReset: RequestHandler = async (req, res, next) => {
 		res.redirect('/');
 		await transporter.sendMail({
 			to: email,
-			from: 'shop@node-complete.com',
+			from: 'shop@node1-complete.com',
 			subject: 'Password reset',
 			html: `
 					<p>You requested a password reset </p>
-					<p>Click this   <a href="http:localhost:3002/reset/${token}"> link </a> to set a new password. </p> 
+					<p>Click this   <a href="http://localhost:3002/reset/${token}"> link </a> to set a new password. </p>
 			`
 		});
 	});
