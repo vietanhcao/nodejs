@@ -47,6 +47,9 @@ export const getEditProduct: RequestHandler = async (req: any, res, next) => {
 export const postEditProduct: RequestHandler = async (req, res, next) => {
 	const { pordId, title, imageUrl, description, price } = req.body;
 	let product: DocumentAddProperty = await Product.findById(pordId);
+	if (product.userId.toString() !== (req as any).user._id.toString()) {
+		return res.redirect('/');
+	}
 	product.title = title;
 	product.imageUrl = imageUrl;
 	product.description = description;
@@ -57,14 +60,12 @@ export const postEditProduct: RequestHandler = async (req, res, next) => {
 
 export const postDeleteProduct: RequestHandler = async (req: any, res, next) => {
 	const { productId } = req.body;
-	// Product.destroy({})
-	let product = await Product.findByIdAndRemove(productId);
-
+	await Product.deleteOne({ _id: productId, userId: req.user._id });
 	res.redirect('/admin/products');
 };
 
 export const getProducts: RequestHandler = async (req: any, res, next) => {
-	let products = await Product.find();
+	let products = await Product.find({ userId: req.user._id });
 	// .select('title price -_id')//select poduct
 	// .populate('userId', 'name')// seclect inside userId (related)
 	// console.log('TCL: getProducts:RequestHandler -> products',products);

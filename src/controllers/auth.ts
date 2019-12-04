@@ -5,6 +5,7 @@ import crypto from 'crypto';
 
 import nodemailer from 'nodemailer';
 import sendgridTransport from 'nodemailer-sendgrid-transport';
+import { get404Page } from './error';
 // const sendgridTransport = require('nodemailer-sendgrid-transport');
 
 const transporter = nodemailer.createTransport(
@@ -162,6 +163,8 @@ export const getNewPassword: RequestHandler = async (req, res, next) => {
 			userId: user._id.toString(),
 			passwordToken: token
 		});
+	} else {
+		get404Page(req, res, next);
 	}
 };
 export const postNewPassword: RequestHandler = async (req, res, next) => {

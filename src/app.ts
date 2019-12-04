@@ -12,6 +12,7 @@ import session from 'express-session';
 import connect from 'connect-mongodb-session';
 import csurf from 'csurf';
 import flash from 'connect-flash';
+import { appendFile } from 'fs';
 
 const csurfProtection = csurf();
 const MongoDBStore = connect(session);
