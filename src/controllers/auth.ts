@@ -2,7 +2,7 @@ import { RequestHandler } from 'express';
 import User from '../models/user';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
-
+import { validationResult } from 'express-validator';
 import nodemailer from 'nodemailer';
 import sendgridTransport from 'nodemailer-sendgrid-transport';
 import { get404Page } from './error';
@@ -77,6 +77,15 @@ export const postLogin: RequestHandler = async (req, res, next) => {
 
 export const postSignup: RequestHandler = async (req, res, next) => {
 	const { email, password, comfirmPassword } = req.body;
+	const errors = validationResult(req);
+	if (!errors.isEmpty()) {
+		console.log(errors.array());
+		return res.status(422).render('auth/signup', {
+			pageTitle: 'Signup',
+			path: '/signup',
+			errorMessage: errors.array()
+		});
+	}
 	let userDoc = await User.findOne({ email: email });
 	if (userDoc) {
 		req.flash('error', 'E-mail exists already, please  pick  a different one');

@@ -1,4 +1,5 @@
 import express from 'express';
+import { check } from 'express-validator';
 import * as authController from '../controllers/auth';
 const authRouter = express.Router();
 
@@ -10,7 +11,7 @@ authRouter.post('/logout', authController.postLogout);
 
 authRouter.get('/signup', authController.getSignup);
 
-authRouter.post('/signup', authController.postSignup);
+authRouter.post('/signup', check('email').isEmail(), authController.postSignup);
 
 authRouter.get('/reset', authController.getReset);
 
