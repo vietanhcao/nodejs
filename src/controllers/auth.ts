@@ -48,12 +48,23 @@ export const getSignup: RequestHandler = async (req, res, next) => {
 	res.render('auth/signup', {
 		pageTitle: 'Signup',
 		path: '/signup',
-		errorMessage: message
+		errorMessage: message,
+		oldInput: { email: '', password: '', comfirmPassword: '' }
 	});
 };
 
 export const postLogin: RequestHandler = async (req, res, next) => {
 	const { email, password } = req.body;
+
+	const errors = validationResult(req);
+	if (!errors.isEmpty()) {
+		console.log(errors.array());
+		return res.status(422).render('auth/login', {
+			pageTitle: 'Login',
+			path: '/login',
+			errorMessage: errors.array()[0].msg
+		});
+	}
 
 	let user = await User.findOne({ email: email });
 	if (!user) {
@@ -76,14 +87,15 @@ export const postLogin: RequestHandler = async (req, res, next) => {
 };
 
 export const postSignup: RequestHandler = async (req, res, next) => {
-	const { email, password, comfirmPassword } = req.body;
+	const { email, password, confirmPassword } = req.body;
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) {
-		console.log(errors.array());
+		console.log(errors.array(), confirmPassword);
 		return res.status(422).render('auth/signup', {
 			pageTitle: 'Signup',
 			path: '/signup',
-			errorMessage: errors.array()[0].msg
+			errorMessage: errors.array()[0].msg,
+			oldInput: { email: email, password: password, confirmPassword: confirmPassword }
 		});
 	}
 	const hashPassword = await bcrypt.hash(password, 12);

@@ -32,7 +32,7 @@ authRouter.post(
 			if (value !== req.body.password) {
 				throw new Error('Passwords have to match!');
 			}
-			return true;
+			return true; //optional
 		})
 	],
 	authController.postSignup
