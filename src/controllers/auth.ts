@@ -83,13 +83,8 @@ export const postSignup: RequestHandler = async (req, res, next) => {
 		return res.status(422).render('auth/signup', {
 			pageTitle: 'Signup',
 			path: '/signup',
-			errorMessage: errors.array()
+			errorMessage: errors.array()[0].msg
 		});
-	}
-	let userDoc = await User.findOne({ email: email });
-	if (userDoc) {
-		req.flash('error', 'E-mail exists already, please  pick  a different one');
-		return res.redirect('/signup');
 	}
 	const hashPassword = await bcrypt.hash(password, 12);
 	const user = new User({
@@ -99,12 +94,12 @@ export const postSignup: RequestHandler = async (req, res, next) => {
 	});
 	await user.save();
 	res.redirect('/login');
-	await transporter.sendMail({
-		to: email,
-		from: 'shop@node-complete.com',
-		subject: 'signup succeeded!',
-		html: '<h1> You successfully signup! </h1>'
-	});
+	// await transporter.sendMail({
+	// 	to: email,
+	// 	from: 'shop@node-complete.com',
+	// 	subject: 'signup succeeded!',
+	// 	html: '<h1> You successfully signup! </h1>'
+	// });
 };
 export const postLogout: RequestHandler = async (req, res, next) => {
 	req.session.destroy((error) => {
