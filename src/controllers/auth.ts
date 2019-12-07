@@ -34,7 +34,60 @@ export const getLogin: RequestHandler = async (req, res, next) => {
 		// orders,
 		pageTitle: 'Login',
 		path: '/login',
-		errorMessage: message
+		errorMessage: message,
+		oldInput: {
+			email: '',
+			password: ''
+		},
+		validationError: {}
+	});
+};
+
+export const postLogin: RequestHandler = async (req, res, next) => {
+	const { email, password } = req.body;
+
+	const errors = validationResult(req);
+	if (!errors.isEmpty()) {
+		const dataValidationError = errors.array().reduce((x, y) => {
+			//validate to view
+			x[y.param] = y.param;
+			return x;
+		}, {});
+		console.log(errors.array());
+		return res.status(422).render('auth/login', {
+			pageTitle: 'Login',
+			path: '/login',
+			errorMessage: errors.array()[0].msg,
+			oldInput: {
+				email: email,
+				password: password
+			},
+			validationError: dataValidationError
+		});
+	}
+
+	let user = await User.findOne({ email: email });
+	const doMatch = await bcrypt.compare(password, (user as any).password);
+	if (!doMatch) {
+		req.flash('error', 'invalid password');
+		return res.status(422).render('auth/login', {
+			pageTitle: 'Login',
+			path: '/login',
+			errorMessage: 'invalid password',
+			oldInput: {
+				email: email,
+				password: password
+			},
+			validationError: { password: 'password' }
+		});
+	}
+	req.session.user = user;
+	req.session.isLoggedIn = true;
+	req.session.save((err) => {
+		// sometimes  store session in mongodb take miliseconds do that can be sure session has been create been
+		if (err) {
+		}
+		res.redirect('/');
 	});
 };
 
@@ -49,43 +102,14 @@ export const getSignup: RequestHandler = async (req, res, next) => {
 		pageTitle: 'Signup',
 		path: '/signup',
 		errorMessage: message,
-		oldInput: { email: '', password: '', comfirmPassword: '' }
-	});
-};
-
-export const postLogin: RequestHandler = async (req, res, next) => {
-	const { email, password } = req.body;
-
-	const errors = validationResult(req);
-	if (!errors.isEmpty()) {
-		console.log(errors.array());
-		return res.status(422).render('auth/login', {
-			pageTitle: 'Login',
-			path: '/login',
-			errorMessage: errors.array()[0].msg
-		});
-	}
-
-	let user = await User.findOne({ email: email });
-	if (!user) {
-		req.flash('error', 'invalid email or password');
-		return res.redirect('/login');
-	}
-	const doMatch = await bcrypt.compare(password, (user as any).password);
-	if (!doMatch) {
-		req.flash('error', 'invalid email or password');
-		return res.redirect('/login');
-	}
-	req.session.user = user;
-	req.session.isLoggedIn = true;
-	req.session.save((err) => {
-		// sometimes  store session in mongodb take miliseconds do that can be sure session has been create been
-		if (err) {
+		oldInput: {
+			email: '',
+			password: '',
+			comfirmPassword: ''
 		}
-		res.redirect('/');
+		// validationError: []
 	});
 };
-
 export const postSignup: RequestHandler = async (req, res, next) => {
 	const { email, password, confirmPassword } = req.body;
 	const errors = validationResult(req);
@@ -95,7 +119,12 @@ export const postSignup: RequestHandler = async (req, res, next) => {
 			pageTitle: 'Signup',
 			path: '/signup',
 			errorMessage: errors.array()[0].msg,
-			oldInput: { email: email, password: password, confirmPassword: confirmPassword }
+			oldInput: {
+				email: email,
+				password: password,
+				confirmPassword: confirmPassword
+			}
+			// validationError: errors.array()
 		});
 	}
 	const hashPassword = await bcrypt.hash(password, 12);

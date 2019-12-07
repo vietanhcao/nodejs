@@ -6,7 +6,19 @@ const authRouter = express.Router();
 
 authRouter.get('/login', authController.getLogin);
 
-authRouter.post('/login', authController.postLogin);
+authRouter.post(
+	'/login',
+	[
+		check('email').isEmail().withMessage('Please enter a email.').custom(async (value, { req }) => {
+			let user = await User.findOne({ email: value });
+			if (!user) {
+				return Promise.reject('invalid email');
+			}
+		}),
+		body('password', 'Password has to be valid.').isLength({ min: 5 }).isAlphanumeric()
+	],
+	authController.postLogin
+);
 
 authRouter.post('/logout', authController.postLogout);
 
