@@ -1,6 +1,7 @@
 import { RequestHandler, Request } from 'express';
 import Product from '../models/product';
 import { Document } from 'mongoose';
+import { validationResult } from 'express-validator';
 
 interface DocumentAddProperty extends Document {
 	[key: string]: any;
@@ -11,11 +12,24 @@ export const getAddProduct: RequestHandler = (req, res, next) => {
 	// console.log(rootDir)
 	res.render('admin/edit-product', {
 		pageTitle: 'Add Product',
-		path: '/admin/add-product'
+		path: '/admin/add-product',
+		errorMessage: null,
+		hasError: false
 	});
 };
 export const postAddProduct: RequestHandler = async (req: any, res, next) => {
 	const { title, price, description, imageUrl } = req.body;
+	const errors = validationResult(req);
+	if (!errors.isEmpty()) {
+		return res.status(422).render('admin/edit-product', {
+			pageTitle: 'Add Product',
+			path: '/admin/add-product',
+			errorMessage: errors.array()[0].msg,
+			editing: false,
+			hasError: true,
+			product: { title, price, description, imageUrl }
+		});
+	}
 	const product = new Product({
 		title: title,
 		price,
@@ -41,11 +55,24 @@ export const getEditProduct: RequestHandler = async (req: any, res, next) => {
 		pageTitle: 'Edit Product',
 		path: '/admin/edit-product',
 		editing: editMode,
-		product: product
+		product: product,
+		hasError: false,
+		errorMessage: null
 	});
 };
 export const postEditProduct: RequestHandler = async (req, res, next) => {
 	const { pordId, title, imageUrl, description, price } = req.body;
+	const errors = validationResult(req);
+	if (!errors.isEmpty()) {
+		return res.status(422).render('admin/edit-product', {
+			pageTitle: 'Edit Product',
+			path: '/admin/edit-product',
+			errorMessage: errors.array()[0].msg,
+			editing: true,
+			hasError: true,
+			product: { _id: pordId, title, price, description, imageUrl }
+		});
+	}
 	let product: DocumentAddProperty = await Product.findById(pordId);
 	if (product.userId.toString() !== (req as any).user._id.toString()) {
 		return res.redirect('/');
