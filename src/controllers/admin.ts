@@ -1,6 +1,6 @@
 import { RequestHandler, Request } from 'express';
 import Product from '../models/product';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 import { validationResult } from 'express-validator';
 
 interface DocumentAddProperty extends Document {
@@ -18,8 +18,8 @@ export const getAddProduct: RequestHandler = (req, res, next) => {
 	});
 };
 export const postAddProduct: RequestHandler = async (req: any, res, next) => {
+	const { title, price, description, imageUrl } = req.body;
 	try {
-		const { title, price, description, imageUrl } = req.body;
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
 			return res.status(422).render('admin/edit-product', {
@@ -32,6 +32,7 @@ export const postAddProduct: RequestHandler = async (req: any, res, next) => {
 			});
 		}
 		const product = new Product({
+			_id: new Types.ObjectId('5de36467ddd7341c9c417555'),
 			title: title,
 			price,
 			description,
@@ -42,6 +43,15 @@ export const postAddProduct: RequestHandler = async (req: any, res, next) => {
 		res.redirect('/');
 	} catch (error) {
 		console.log('TCL: postAddProduct:RequestHandler -> error', error);
+		// return res.status(500).render('admin/edit-product', {
+		// 	pageTitle: 'Add Product',
+		// 	path: '/admin/add-product',
+		// 	errorMessage: 'Database operation failed, please try again!',
+		// 	editing: false,
+		// 	hasError: true,
+		// 	product: { title, price, description, imageUrl }
+		// });
+		res.redirect('/500');
 	}
 };
 export const getEditProduct: RequestHandler = async (req: any, res, next) => {

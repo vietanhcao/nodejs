@@ -5,7 +5,6 @@ import crypto from 'crypto';
 import { validationResult } from 'express-validator';
 import nodemailer from 'nodemailer';
 import sendgridTransport from 'nodemailer-sendgrid-transport';
-import { get404Page } from './error';
 // const sendgridTransport = require('nodemailer-sendgrid-transport');
 
 const transporter = nodemailer.createTransport(
@@ -217,7 +216,7 @@ export const getNewPassword: RequestHandler = async (req, res, next) => {
 				passwordToken: token
 			});
 		} else {
-			get404Page(req, res, next);
+			res.redirect('/404');
 		}
 	} catch (error) {
 		console.log('TCL: getNewPassword:RequestHandler -> error', error);

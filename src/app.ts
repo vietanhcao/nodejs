@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import path from 'path';
 import { adminRouter } from './routes/admin';
 import shopRouter from './routes/shop';
-import { get404Page } from './controllers/error';
+import * as errorControllers from './controllers/error';
 import { getYourPath } from './ultil/path';
 import mongoose from 'mongoose';
 import User from './models/user';
@@ -70,7 +70,8 @@ app.use('/admin', adminRouter);
 app.use(shopRouter); //every thing not found in shop will swich to authRouter
 app.use(authRouter);
 
-app.use(get404Page);
+app.get('/500', errorControllers.get500Page);
+app.get('/404', errorControllers.get404Page);
 // Product.sequelize.sync({ force: true, logging: console.log })
 // setup relationship add one to many relationship
 
