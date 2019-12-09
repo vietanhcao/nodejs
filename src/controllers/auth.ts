@@ -65,30 +65,33 @@ export const postLogin: RequestHandler = async (req, res, next) => {
 			validationError: dataValidationError
 		});
 	}
-
-	let user = await User.findOne({ email: email });
-	const doMatch = await bcrypt.compare(password, (user as any).password);
-	if (!doMatch) {
-		req.flash('error', 'invalid password');
-		return res.status(422).render('auth/login', {
-			pageTitle: 'Login',
-			path: '/login',
-			errorMessage: 'invalid password',
-			oldInput: {
-				email: email,
-				password: password
-			},
-			validationError: { password: 'password' }
-		});
-	}
-	req.session.user = user;
-	req.session.isLoggedIn = true;
-	req.session.save((err) => {
-		// sometimes  store session in mongodb take miliseconds do that can be sure session has been create been
-		if (err) {
+	try {
+		let user = await User.findOne({ email: email });
+		const doMatch = await bcrypt.compare(password, (user as any).password);
+		if (!doMatch) {
+			req.flash('error', 'invalid password');
+			return res.status(422).render('auth/login', {
+				pageTitle: 'Login',
+				path: '/login',
+				errorMessage: 'invalid password',
+				oldInput: {
+					email: email,
+					password: password
+				},
+				validationError: { password: 'password' }
+			});
 		}
-		res.redirect('/');
-	});
+		req.session.user = user;
+		req.session.isLoggedIn = true;
+		req.session.save((err) => {
+			// sometimes  store session in mongodb take miliseconds do that can be sure session has been create been
+			if (err) {
+			}
+			res.redirect('/');
+		});
+	} catch (error) {
+		console.log('TCL: error', error);
+	}
 };
 
 export const getSignup: RequestHandler = async (req, res, next) => {
@@ -127,20 +130,24 @@ export const postSignup: RequestHandler = async (req, res, next) => {
 			// validationError: errors.array()
 		});
 	}
-	const hashPassword = await bcrypt.hash(password, 12);
-	const user = new User({
-		email: email,
-		password: hashPassword,
-		cart: { items: [] }
-	});
-	await user.save();
-	res.redirect('/login');
-	// await transporter.sendMail({
-	// 	to: email,
-	// 	from: 'shop@node-complete.com',
-	// 	subject: 'signup succeeded!',
-	// 	html: '<h1> You successfully signup! </h1>'
-	// });
+	try {
+		const hashPassword = await bcrypt.hash(password, 12);
+		const user = new User({
+			email: email,
+			password: hashPassword,
+			cart: { items: [] }
+		});
+		await user.save();
+		res.redirect('/login');
+		// await transporter.sendMail({
+		// 	to: email,
+		// 	from: 'shop@node-complete.com',
+		// 	subject: 'signup succeeded!',
+		// 	html: '<h1> You successfully signup! </h1>'
+		// });
+	} catch (error) {
+		console.log('TCL: postSignup:RequestHandler -> error', error);
+	}
 };
 export const postLogout: RequestHandler = async (req, res, next) => {
 	req.session.destroy((error) => {
@@ -192,37 +199,45 @@ export const postReset: RequestHandler = async (req, res, next) => {
 };
 
 export const getNewPassword: RequestHandler = async (req, res, next) => {
-	const token = req.params.token;
-	let user = await User.findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } }); // gt => greater than
-	if (user) {
-		let message = req.flash('error');
-		if (message.length > 0) {
-			message = message[0];
+	try {
+		const token = req.params.token;
+		let user = await User.findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } }); // gt => greater than
+		if (user) {
+			let message = req.flash('error');
+			if (message.length > 0) {
+				message = message[0];
+			} else {
+				message = null;
+			}
+			res.render('auth/new-password', {
+				pageTitle: 'New Password',
+				path: '/new-password',
+				errorMessage: message,
+				userId: user._id.toString(),
+				passwordToken: token
+			});
 		} else {
-			message = null;
+			get404Page(req, res, next);
 		}
-		res.render('auth/new-password', {
-			pageTitle: 'New Password',
-			path: '/new-password',
-			errorMessage: message,
-			userId: user._id.toString(),
-			passwordToken: token
-		});
-	} else {
-		get404Page(req, res, next);
+	} catch (error) {
+		console.log('TCL: getNewPassword:RequestHandler -> error', error);
 	}
 };
 export const postNewPassword: RequestHandler = async (req, res, next) => {
-	const { password: newPassowrd, userId, passwordToken } = req.body;
-	let restUser = await User.findOne({
-		resetToken: passwordToken,
-		resetTokenExpiration: { $gt: Date.now() },
-		_id: userId
-	});
-	let hashedPassword = await bcrypt.hash(newPassowrd, 12);
-	(restUser as any).password = hashedPassword;
-	(restUser as any).resetToken = undefined;
-	(restUser as any).resetTokenExpiration = undefined;
-	await restUser.save();
-	res.redirect('/login');
+	try {
+		const { password: newPassowrd, userId, passwordToken } = req.body;
+		let restUser = await User.findOne({
+			resetToken: passwordToken,
+			resetTokenExpiration: { $gt: Date.now() },
+			_id: userId
+		});
+		let hashedPassword = await bcrypt.hash(newPassowrd, 12);
+		(restUser as any).password = hashedPassword;
+		(restUser as any).resetToken = undefined;
+		(restUser as any).resetTokenExpiration = undefined;
+		await restUser.save();
+		res.redirect('/login');
+	} catch (error) {
+		console.log('TCL: postNewPassword:RequestHandler -> error', error);
+	}
 };

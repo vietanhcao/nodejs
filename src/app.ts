@@ -43,11 +43,18 @@ app.use(csurfProtection);
 app.use(flash());
 
 app.use(async (req, res, next) => {
-	if (!req.session.user) {
-		return next();
+	try {
+		if (!req.session.user) {
+			return next();
+		}
+		let user = await User.findById(req.session.user._id);
+		if (!user) {
+			return next();
+		}
+		(req as any).user = user;
+	} catch (error) {
+		throw new Error(error);
 	}
-	let user = await User.findById(req.session.user._id);
-	(req as any).user = user;
 
 	next();
 });

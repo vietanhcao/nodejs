@@ -59,23 +59,35 @@ export const getCart: RequestHandler = async (req: any, res, next) => {
 	});
 };
 export const postCart: RequestHandler = async (req: any, res, next) => {
-	const { productId } = req.body;
-	let product = await Product.findById(productId);
-	await req.user.addToCart(product);
-	res.redirect('/cart');
+	try {
+		const { productId } = req.body;
+		let product = await Product.findById(productId);
+		await req.user.addToCart(product);
+		res.redirect('/cart');
+	} catch (error) {
+		console.log('TCL: postCart:RequestHandler -> error', error);
+	}
 };
 export const postCartDeleteProduct: RequestHandler = async (req: any, res, next) => {
-	const { productId } = req.body;
-	await req.user.deleteItemFromCart(productId);
-	res.redirect('/cart');
+	try {
+		const { productId } = req.body;
+		await req.user.deleteItemFromCart(productId);
+		res.redirect('/cart');
+	} catch (error) {
+		console.log('TCL: postCartDeleteProduct:RequestHandler -> error', error);
+	}
 };
 export const getOrders: RequestHandler = async (req: any, res, next) => {
-	let orders: any = await Order.find({ 'user.userId': req.user._id });
-	res.render('shop/orders', {
-		orders,
-		pageTitle: 'Your Orders',
-		path: '/orders'
-	});
+	try {
+		let orders: any = await Order.find({ 'user.userId': req.user._id });
+		res.render('shop/orders', {
+			orders,
+			pageTitle: 'Your Orders',
+			path: '/orders'
+		});
+	} catch (error) {
+		console.log('TCL: getOrders:RequestHandler -> error', error);
+	}
 };
 export const postOrder: RequestHandler = async (req: any, res, next) => {
 	try {
@@ -97,7 +109,7 @@ export const postOrder: RequestHandler = async (req: any, res, next) => {
 		await req.user.clearCart();
 		res.redirect('/orders');
 	} catch (error) {
-		console.log(error);
+		console.log('TCL: postOrder:RequestHandler -> error', error);
 	}
 };
 

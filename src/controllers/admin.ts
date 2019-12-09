@@ -18,47 +18,55 @@ export const getAddProduct: RequestHandler = (req, res, next) => {
 	});
 };
 export const postAddProduct: RequestHandler = async (req: any, res, next) => {
-	const { title, price, description, imageUrl } = req.body;
-	const errors = validationResult(req);
-	if (!errors.isEmpty()) {
-		return res.status(422).render('admin/edit-product', {
-			pageTitle: 'Add Product',
-			path: '/admin/add-product',
-			errorMessage: errors.array()[0].msg,
-			editing: false,
-			hasError: true,
-			product: { title, price, description, imageUrl }
+	try {
+		const { title, price, description, imageUrl } = req.body;
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			return res.status(422).render('admin/edit-product', {
+				pageTitle: 'Add Product',
+				path: '/admin/add-product',
+				errorMessage: errors.array()[0].msg,
+				editing: false,
+				hasError: true,
+				product: { title, price, description, imageUrl }
+			});
+		}
+		const product = new Product({
+			title: title,
+			price,
+			description,
+			imageUrl,
+			userId: req.user._id
 		});
+		await product.save();
+		res.redirect('/');
+	} catch (error) {
+		console.log('TCL: postAddProduct:RequestHandler -> error', error);
 	}
-	const product = new Product({
-		title: title,
-		price,
-		description,
-		imageUrl,
-		userId: req.user._id
-	});
-	await product.save();
-	res.redirect('/');
 };
 export const getEditProduct: RequestHandler = async (req: any, res, next) => {
-	const editMode = req.query.edit;
-	if (!editMode) {
-		return res.redirect('/');
+	try {
+		const editMode = req.query.edit;
+		if (!editMode) {
+			return res.redirect('/');
+		}
+		const productId = req.params.productId;
+		// let product = await Product.findByPk(productId);
+		const product = await Product.findById(productId);
+		if (!product) {
+			return res.redirect('/');
+		}
+		res.render('admin/edit-product', {
+			pageTitle: 'Edit Product',
+			path: '/admin/edit-product',
+			editing: editMode,
+			product: product,
+			hasError: false,
+			errorMessage: null
+		});
+	} catch (error) {
+		console.log('TCL: getEditProduct:RequestHandler -> error', error);
 	}
-	const productId = req.params.productId;
-	// let product = await Product.findByPk(productId);
-	const product = await Product.findById(productId);
-	if (!product) {
-		return res.redirect('/');
-	}
-	res.render('admin/edit-product', {
-		pageTitle: 'Edit Product',
-		path: '/admin/edit-product',
-		editing: editMode,
-		product: product,
-		hasError: false,
-		errorMessage: null
-	});
 };
 export const postEditProduct: RequestHandler = async (req, res, next) => {
 	const { pordId, title, imageUrl, description, price } = req.body;
@@ -73,33 +81,45 @@ export const postEditProduct: RequestHandler = async (req, res, next) => {
 			product: { _id: pordId, title, price, description, imageUrl }
 		});
 	}
-	let product: DocumentAddProperty = await Product.findById(pordId);
-	if (product.userId.toString() !== (req as any).user._id.toString()) {
-		return res.redirect('/');
+	try {
+		let product: DocumentAddProperty = await Product.findById(pordId);
+		if (product.userId.toString() !== (req as any).user._id.toString()) {
+			return res.redirect('/');
+		}
+		product.title = title;
+		product.imageUrl = imageUrl;
+		product.description = description;
+		product.price = price;
+		await product.save();
+		res.redirect('/admin/products');
+	} catch (error) {
+		console.log('TCL: postEditProduct:RequestHandler -> error', error);
 	}
-	product.title = title;
-	product.imageUrl = imageUrl;
-	product.description = description;
-	product.price = price;
-	await product.save();
-	res.redirect('/admin/products');
 };
 
 export const postDeleteProduct: RequestHandler = async (req: any, res, next) => {
-	const { productId } = req.body;
-	await Product.deleteOne({ _id: productId, userId: req.user._id });
-	res.redirect('/admin/products');
+	try {
+		const { productId } = req.body;
+		await Product.deleteOne({ _id: productId, userId: req.user._id });
+		res.redirect('/admin/products');
+	} catch (error) {
+		console.log('TCL: postDeleteProduct:RequestHandler -> error', error);
+	}
 };
 
 export const getProducts: RequestHandler = async (req: any, res, next) => {
-	let products = await Product.find({ userId: req.user._id });
-	// .select('title price -_id')//select poduct
-	// .populate('userId', 'name')// seclect inside userId (related)
-	// console.log('TCL: getProducts:RequestHandler -> products',products);
-	// console.trace('TCL: getProducts:RequestHandler -> products',products);
-	res.render('admin/products', {
-		prods: products,
-		pageTitle: 'Admin Products',
-		path: '/admin/products'
-	});
+	try {
+		let products = await Product.find({ userId: req.user._id });
+		// .select('title price -_id')//select poduct
+		// .populate('userId', 'name')// seclect inside userId (related)
+		// console.log('TCL: getProducts:RequestHandler -> products',products);
+		// console.trace('TCL: getProducts:RequestHandler -> products',products);
+		res.render('admin/products', {
+			prods: products,
+			pageTitle: 'Admin Products',
+			path: '/admin/products'
+		});
+	} catch (error) {
+		console.log('TCL: getProducts:RequestHandler -> error', error);
+	}
 };
