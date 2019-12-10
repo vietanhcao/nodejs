@@ -19,7 +19,7 @@ _adminRouter.post(
 	isAuth,
 	[
 		body('title', 'inValid title.').isString().isLength({ min: 3 }).trim(),
-		body('imageUrl', 'inValid imageUrl.').trim().isURL(),
+
 		body('price', 'inValid price.').isFloat(),
 		body('description', 'inValid description.').isLength({ min: 5, max: 400 }).trim()
 	],
@@ -33,7 +33,7 @@ _adminRouter.post(
 	isAuth,
 	[
 		body('title', 'inValid title.').isString().isLength({ min: 3 }).trim(),
-		body('imageUrl', 'inValid imageUrl.').trim().isURL(),
+
 		body('price', 'inValid price.').isFloat(),
 		body('description', 'inValid description.').isLength({ min: 5, max: 400 }).trim()
 	],

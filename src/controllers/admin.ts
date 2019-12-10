@@ -17,8 +17,10 @@ export const getAddProduct: RequestHandler = (req, res, next) => {
 		hasError: false
 	});
 };
-export const postAddProduct: RequestHandler = async (req: any, res, next) => {
-	const { title, price, description, imageUrl } = req.body;
+export const postAddProduct: RequestHandler = async (req, res, next) => {
+	const { title, price, description } = req.body;
+	const imageUrl = req.file;
+	console.log('TCL: postAddProduct:RequestHandler -> imageUrl', imageUrl);
 	try {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
@@ -37,19 +39,19 @@ export const postAddProduct: RequestHandler = async (req: any, res, next) => {
 			price,
 			description,
 			imageUrl,
-			userId: req.user._id
+			userId: (req as any).user._id
 		});
 		await product.save();
 		res.redirect('/');
 	} catch (error) {
-		console.log('TCL: postAddProduct:RequestHandler -> error', error);
+		// console.log('TCL: postAddProduct:RequestHandler -> error', error);
 		// return res.status(500).render('admin/edit-product', {
 		// 	pageTitle: 'Add Product',
 		// 	path: '/admin/add-product',
 		// 	errorMessage: 'Database operation failed, please try again!',
 		// 	editing: false,
 		// 	hasError: true,
-		// 	product: { title, price, description, imageUrl }
+		// 	product: { title, price, description, image }
 		// });
 		// res.redirect('/500');
 		const err = new Error(error);
@@ -85,7 +87,7 @@ export const getEditProduct: RequestHandler = async (req: any, res, next) => {
 	}
 };
 export const postEditProduct: RequestHandler = async (req, res, next) => {
-	const { pordId, title, imageUrl, description, price } = req.body;
+	const { pordId, title, image, description, price } = req.body;
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) {
 		return res.status(422).render('admin/edit-product', {
@@ -94,7 +96,7 @@ export const postEditProduct: RequestHandler = async (req, res, next) => {
 			errorMessage: errors.array()[0].msg,
 			editing: true,
 			hasError: true,
-			product: { _id: pordId, title, price, description, imageUrl }
+			product: { _id: pordId, title, price, description, image }
 		});
 	}
 	try {
@@ -103,7 +105,7 @@ export const postEditProduct: RequestHandler = async (req, res, next) => {
 			return res.redirect('/');
 		}
 		product.title = title;
-		product.imageUrl = imageUrl;
+		product.image = image;
 		product.description = description;
 		product.price = price;
 		await product.save();

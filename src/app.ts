@@ -12,6 +12,7 @@ import session from 'express-session';
 import connect from 'connect-mongodb-session';
 import csurf from 'csurf';
 import flash from 'connect-flash';
+import multer from 'multer';
 import { appendFile } from 'fs';
 
 const csurfProtection = csurf();
@@ -24,11 +25,19 @@ const store = new MongoDBStore({
 	uri: MONGODB_URL,
 	collection: 'sesstions'
 });
-
+const fileStorage = multer.diskStorage({
+	destination: (req, file, cb) => {
+		cb(null, 'src/images');
+	},
+	filename: (req, file, cb) => {
+		cb(null, `${new Date().toISOString()} - ${file.originalname}`);
+	}
+});
 app.set('view engine', 'pug');
 app.set('views', getYourPath + '/views');
 
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(multer({ storage: fileStorage }).single('image'));
 // app.disable('etag');
 app.use(express.static(path.join(__dirname, 'public'))); //file css
 app.use(
@@ -75,7 +84,11 @@ app.get('/404', errorControllers.get404Page);
 app.use((error, req, res, next) => {
 	// res.status(error.httpStatusCode)
 	// res.redirect('/500');
-	res.status(500).render('500', { pageTitle: 'Error!', path: '500', isAuthenticated: req.session.isLoggedIn });
+	res.status(500).render('500', {
+		pageTitle: 'Error!',
+		path: '500',
+		isAuthenticated: req.session.isLoggedIn
+	});
 });
 // Product.sequelize.sync({ force: true, logging: console.log })
 // setup relationship add one to many relationship
