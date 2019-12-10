@@ -90,6 +90,9 @@ export const postLogin: RequestHandler = async (req, res, next) => {
 		});
 	} catch (error) {
 		console.log('TCL: error', error);
+		const err = new Error(error);
+		(err as any).httpStatusCode = 500;
+		return next(err);
 	}
 };
 
@@ -146,6 +149,9 @@ export const postSignup: RequestHandler = async (req, res, next) => {
 		// });
 	} catch (error) {
 		console.log('TCL: postSignup:RequestHandler -> error', error);
+		const err = new Error(error);
+		(err as any).httpStatusCode = 500;
+		return next(err);
 	}
 };
 export const postLogout: RequestHandler = async (req, res, next) => {
@@ -170,30 +176,36 @@ export const getReset: RequestHandler = async (req, res, next) => {
 
 export const postReset: RequestHandler = async (req, res, next) => {
 	const { email } = req.body;
-
 	crypto.randomBytes(32, async (err, buffer) => {
 		if (err) {
 			return res.redirect('/reset');
 		}
-		const token = buffer.toString('hex');
-		let userDoc = await User.findOne({ email: email });
-		if (!userDoc) {
-			req.flash('error', 'No account with that email found.');
-			return res.redirect('/reset');
-		}
-		(userDoc as any).resetToken = token;
-		(userDoc as any).resetTokenExpiration = Date.now() + 3600000;
-		await userDoc.save();
-		res.redirect('/');
-		await transporter.sendMail({
-			to: email,
-			from: 'shop@node1-complete.com',
-			subject: 'Password reset',
-			html: `
+		try {
+			const token = buffer.toString('hex');
+			let userDoc = await User.findOne({ email: email });
+			if (!userDoc) {
+				req.flash('error', 'No account with that email found.');
+				return res.redirect('/reset');
+			}
+			(userDoc as any).resetToken = token;
+			(userDoc as any).resetTokenExpiration = Date.now() + 3600000;
+			await userDoc.save();
+			res.redirect('/');
+			await transporter.sendMail({
+				to: email,
+				from: 'shop@node1-complete.com',
+				subject: 'Password reset',
+				html: `
 					<p>You requested a password reset </p>
 					<p>Click this   <a href="http://localhost:3002/reset/${token}"> link </a> to set a new password. </p>
 			`
-		});
+			});
+		} catch (error) {
+			console.log('TCL: postReset:RequestHandler -> error', error);
+			const err = new Error(error);
+			(err as any).httpStatusCode = 500;
+			return next(err);
+		}
 	});
 };
 
@@ -220,6 +232,9 @@ export const getNewPassword: RequestHandler = async (req, res, next) => {
 		}
 	} catch (error) {
 		console.log('TCL: getNewPassword:RequestHandler -> error', error);
+		const err = new Error(error);
+		(err as any).httpStatusCode = 500;
+		return next(err);
 	}
 };
 export const postNewPassword: RequestHandler = async (req, res, next) => {
@@ -238,5 +253,8 @@ export const postNewPassword: RequestHandler = async (req, res, next) => {
 		res.redirect('/login');
 	} catch (error) {
 		console.log('TCL: postNewPassword:RequestHandler -> error', error);
+		const err = new Error(error);
+		(err as any).httpStatusCode = 500;
+		return next(err);
 	}
 };

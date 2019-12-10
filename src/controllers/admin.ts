@@ -32,7 +32,7 @@ export const postAddProduct: RequestHandler = async (req: any, res, next) => {
 			});
 		}
 		const product = new Product({
-			_id: new Types.ObjectId('5de36467ddd7341c9c417555'),
+			// _id: new Types.ObjectId('5de36467ddd7341c9c417555'),
 			title: title,
 			price,
 			description,
@@ -51,7 +51,10 @@ export const postAddProduct: RequestHandler = async (req: any, res, next) => {
 		// 	hasError: true,
 		// 	product: { title, price, description, imageUrl }
 		// });
-		res.redirect('/500');
+		// res.redirect('/500');
+		const err = new Error(error);
+		(err as any).httpStatusCode = 500;
+		return next(err);
 	}
 };
 export const getEditProduct: RequestHandler = async (req: any, res, next) => {
@@ -76,6 +79,9 @@ export const getEditProduct: RequestHandler = async (req: any, res, next) => {
 		});
 	} catch (error) {
 		console.log('TCL: getEditProduct:RequestHandler -> error', error);
+		const err = new Error(error);
+		(err as any).httpStatusCode = 500;
+		return next(err);
 	}
 };
 export const postEditProduct: RequestHandler = async (req, res, next) => {
@@ -104,6 +110,9 @@ export const postEditProduct: RequestHandler = async (req, res, next) => {
 		res.redirect('/admin/products');
 	} catch (error) {
 		console.log('TCL: postEditProduct:RequestHandler -> error', error);
+		const err = new Error(error);
+		(err as any).httpStatusCode = 500;
+		return next(err);
 	}
 };
 
@@ -114,6 +123,9 @@ export const postDeleteProduct: RequestHandler = async (req: any, res, next) => 
 		res.redirect('/admin/products');
 	} catch (error) {
 		console.log('TCL: postDeleteProduct:RequestHandler -> error', error);
+		const err = new Error(error);
+		(err as any).httpStatusCode = 500;
+		return next(err);
 	}
 };
 
@@ -131,5 +143,8 @@ export const getProducts: RequestHandler = async (req: any, res, next) => {
 		});
 	} catch (error) {
 		console.log('TCL: getProducts:RequestHandler -> error', error);
+		const err = new Error(error);
+		(err as any).httpStatusCode = 500;
+		return next(err);
 	}
 };

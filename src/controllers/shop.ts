@@ -15,6 +15,9 @@ export const getProducts: RequestHandler = async (req, res, next) => {
 		});
 	} catch (error) {
 		console.log('get product', error);
+		const err = new Error(error);
+		(err as any).httpStatusCode = 500;
+		return next(err);
 	}
 };
 
@@ -29,6 +32,9 @@ export const getProduct: RequestHandler = async (req, res, next) => {
 		});
 	} catch (error) {
 		console.log('get product', error);
+		const err = new Error(error);
+		(err as any).httpStatusCode = 500;
+		return next(err);
 	}
 };
 
@@ -44,19 +50,29 @@ export const getIndex: RequestHandler = async (req, res, next) => {
 		});
 	} catch (error) {
 		console.log('get product', error);
+		const err = new Error(error);
+		(err as any).httpStatusCode = 500;
+		return next(err);
 	}
 };
 export const getCart: RequestHandler = async (req: any, res, next) => {
-	let user = await req.user
-		.populate('cart.items.productId') //'cart.items.productId' => execute get data ref
-		.execPopulate(); // wrap promise and excecuted
-	let products = user.cart.items;
+	try {
+		let user = await req.user
+			.populate('cart.items.productId') //'cart.items.productId' => execute get data ref
+			.execPopulate(); // wrap promise and excecuted
+		let products = user.cart.items;
 
-	res.render('shop/cart', {
-		products: products,
-		pageTitle: 'Your Cart',
-		path: '/cart'
-	});
+		res.render('shop/cart', {
+			products: products,
+			pageTitle: 'Your Cart',
+			path: '/cart'
+		});
+	} catch (error) {
+		console.log('TCL: getCart:RequestHandler -> error', error);
+		const err = new Error(error);
+		(err as any).httpStatusCode = 500;
+		return next(err);
+	}
 };
 export const postCart: RequestHandler = async (req: any, res, next) => {
 	try {
@@ -66,6 +82,9 @@ export const postCart: RequestHandler = async (req: any, res, next) => {
 		res.redirect('/cart');
 	} catch (error) {
 		console.log('TCL: postCart:RequestHandler -> error', error);
+		const err = new Error(error);
+		(err as any).httpStatusCode = 500;
+		return next(err);
 	}
 };
 export const postCartDeleteProduct: RequestHandler = async (req: any, res, next) => {
@@ -75,6 +94,9 @@ export const postCartDeleteProduct: RequestHandler = async (req: any, res, next)
 		res.redirect('/cart');
 	} catch (error) {
 		console.log('TCL: postCartDeleteProduct:RequestHandler -> error', error);
+		const err = new Error(error);
+		(err as any).httpStatusCode = 500;
+		return next(err);
 	}
 };
 export const getOrders: RequestHandler = async (req: any, res, next) => {
@@ -87,6 +109,9 @@ export const getOrders: RequestHandler = async (req: any, res, next) => {
 		});
 	} catch (error) {
 		console.log('TCL: getOrders:RequestHandler -> error', error);
+		const err = new Error(error);
+		(err as any).httpStatusCode = 500;
+		return next(err);
 	}
 };
 export const postOrder: RequestHandler = async (req: any, res, next) => {
@@ -110,6 +135,9 @@ export const postOrder: RequestHandler = async (req: any, res, next) => {
 		res.redirect('/orders');
 	} catch (error) {
 		console.log('TCL: postOrder:RequestHandler -> error', error);
+		const err = new Error(error);
+		(err as any).httpStatusCode = 500;
+		return next(err);
 	}
 };
 

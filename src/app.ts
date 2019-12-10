@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { RequestHandler } from 'express';
 import bodyParser from 'body-parser';
 import path from 'path';
 import { adminRouter } from './routes/admin';
@@ -72,6 +72,10 @@ app.use(authRouter);
 
 app.get('/500', errorControllers.get500Page);
 app.get('/404', errorControllers.get404Page);
+app.use((error, req, res, next) => {
+	// res.status(error.httpStatusCode)
+	res.redirect('/500');
+});
 // Product.sequelize.sync({ force: true, logging: console.log })
 // setup relationship add one to many relationship
 
