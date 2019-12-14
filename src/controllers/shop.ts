@@ -145,17 +145,27 @@ export const postOrder: RequestHandler = async (req: any, res, next) => {
 export const getInvoice: RequestHandler = async (req, res, next) => {
 	try {
 		const orderId = req.params.orderId;
-		const invoiceName = '1000cumtuthongdungnhat-' + orderId + '.pdf';
+		let order = await Order.findById(orderId);
+		if (!order) {
+			throw new Error('No order found!');
+		}
+		if ((order as any).user.userId.toString() !== (req as any).user._id.toString()) {
+			throw new Error('Unauthorized');
+		}
+		const invoiceName = 'Essential Grammar in Use 2nd Edition by R. Murphy - Book-' + orderId + '.pdf';
 		const invoicePath = path.join('src', 'data', 'invoices', invoiceName);
-		fs.readFile(invoicePath, (err, data) => {
-			if (err) {
-				console.log('TCL: getInvoice:RequestHandler -> err', err);
-				return next(err);
-			}
-			res.setHeader('Content-Type', 'application/pdf');
-			res.setHeader('Content-Disposition', `inline; filename=${invoiceName}`);
-			res.send(data);
-		});
+		// fs.readFile(invoicePath, (err, data) => {
+		// 	if (err) {
+		// 		console.log('TCL: getInvoice:RequestHandler -> err', err);
+		// 		return next(err);
+		// 	}
+		// 	res.setHeader('Content-Type', 'application/pdf');
+		// 	res.setHeader('Content-Disposition', `inline; filename=${invoiceName}`);
+		// 	res.send(data);
+		// });
+		const file = fs.createReadStream(invoicePath);
+		res.setHeader('Content-Disposition', `inline; filename=${invoiceName}`);
+		file.pipe(res);
 	} catch (error) {
 		console.log('TCL: getOrders:RequestHandler -> error', error);
 		const err = new Error(error);
