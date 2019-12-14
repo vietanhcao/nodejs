@@ -10,7 +10,7 @@ shopRouter.get('/', shopController.getIndex);
 
 shopRouter.get('/products', shopController.getProducts);
 
-shopRouter.get('/products/1/:productId', shopController.getProduct);
+shopRouter.get('/products/:productId', shopController.getProduct);
 
 shopRouter.get('/cart', isAuth, shopController.getCart);
 
@@ -18,9 +18,11 @@ shopRouter.post('/cart', isAuth, shopController.postCart);
 
 shopRouter.post('/cart-delete-item', isAuth, shopController.postCartDeleteProduct);
 
-shopRouter.get('/Orders', isAuth, shopController.getOrders);
+shopRouter.get('/orders', isAuth, shopController.getOrders);
 
 shopRouter.post('/create-order', isAuth, shopController.postOrder);
+
+shopRouter.get('/orders/:orderId', isAuth, shopController.getInvoice);
 
 // shopRouter.get('/checkout', shopController.getCheckout);
 

@@ -2,6 +2,8 @@ import { RequestHandler } from 'express';
 // import { Product } from '../models/product';
 import Product from '../models/product';
 import Order from '../models/order';
+import fs from 'fs';
+import path from 'path';
 
 export const getProducts: RequestHandler = async (req, res, next) => {
 	// res.sendFile(path.join(rootDir,'views','shop.html'))// not slash because on windown \ , linus use / dir
@@ -140,5 +142,23 @@ export const postOrder: RequestHandler = async (req: any, res, next) => {
 		return next(err);
 	}
 };
-
+export const getInvoice: RequestHandler = async (req, res, next) => {
+	try {
+		const orderId = req.params.orderId;
+		const invoiceName = '1000cumtuthongdungnhat-' + orderId + '.pdf';
+		const invoicePath = path.join('src', 'data', 'invoices', invoiceName);
+		fs.readFile(invoicePath, (err, data) => {
+			if (err) {
+				console.log('TCL: getInvoice:RequestHandler -> err', err);
+				return next(err);
+			}
+			res.send(data);
+		});
+	} catch (error) {
+		console.log('TCL: getOrders:RequestHandler -> error', error);
+		const err = new Error(error);
+		(err as any).httpStatusCode = 500;
+		return next(err);
+	}
+};
 // export const adminData = _product;
