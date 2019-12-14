@@ -19,8 +19,19 @@ export const getAddProduct: RequestHandler = (req, res, next) => {
 };
 export const postAddProduct: RequestHandler = async (req, res, next) => {
 	const { title, price, description } = req.body;
-	const imageUrl = req.file;
-	console.log('TCL: postAddProduct:RequestHandler -> imageUrl', imageUrl);
+	const image = req.file;
+	console.log('TCL: postAddProduct:RequestHandler -> image', image);
+	if (!image) {
+		return res.status(422).render('admin/edit-product', {
+			pageTitle: 'Add Product',
+			path: '/admin/add-product',
+			errorMessage: 'Attached file is not an image.',
+			editing: false,
+			hasError: true,
+			product: { title, price, description }
+		});
+	}
+	const imageUrl = image.path;
 	try {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
@@ -30,7 +41,7 @@ export const postAddProduct: RequestHandler = async (req, res, next) => {
 				errorMessage: errors.array()[0].msg,
 				editing: false,
 				hasError: true,
-				product: { title, price, description, imageUrl }
+				product: { title, price, description }
 			});
 		}
 		const product = new Product({
@@ -87,7 +98,8 @@ export const getEditProduct: RequestHandler = async (req: any, res, next) => {
 	}
 };
 export const postEditProduct: RequestHandler = async (req, res, next) => {
-	const { pordId, title, image, description, price } = req.body;
+	const { pordId, title, description, price } = req.body;
+	const image = req.file;
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) {
 		return res.status(422).render('admin/edit-product', {
@@ -96,7 +108,7 @@ export const postEditProduct: RequestHandler = async (req, res, next) => {
 			errorMessage: errors.array()[0].msg,
 			editing: true,
 			hasError: true,
-			product: { _id: pordId, title, price, description, image }
+			product: { _id: pordId, title, price, description }
 		});
 	}
 	try {
@@ -105,9 +117,11 @@ export const postEditProduct: RequestHandler = async (req, res, next) => {
 			return res.redirect('/');
 		}
 		product.title = title;
-		product.image = image;
 		product.description = description;
 		product.price = price;
+		if (image) {
+			product.imageUrl = image.path;
+		}
 		await product.save();
 		res.redirect('/admin/products');
 	} catch (error) {
