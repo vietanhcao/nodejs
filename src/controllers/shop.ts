@@ -4,6 +4,7 @@ import Product from '../models/product';
 import Order from '../models/order';
 import fs from 'fs';
 import path from 'path';
+import PDFDocument from 'pdfkit';
 
 export const getProducts: RequestHandler = async (req, res, next) => {
 	// res.sendFile(path.join(rootDir,'views','shop.html'))// not slash because on windown \ , linus use / dir
@@ -154,6 +155,14 @@ export const getInvoice: RequestHandler = async (req, res, next) => {
 		}
 		const invoiceName = 'Essential Grammar in Use 2nd Edition by R. Murphy - Book-' + orderId + '.pdf';
 		const invoicePath = path.join('src', 'data', 'invoices', invoiceName);
+
+		const pdfDoc = new PDFDocument();
+		res.setHeader('Content-Disposition', `inline; filename=${invoiceName}`);
+
+		pdfDoc.pipe(fs.createWriteStream(invoicePath));
+		pdfDoc.pipe(res);
+		pdfDoc.text('hello world');
+		pdfDoc.end();
 		// fs.readFile(invoicePath, (err, data) => {
 		// 	if (err) {
 		// 		console.log('TCL: getInvoice:RequestHandler -> err', err);
@@ -163,9 +172,9 @@ export const getInvoice: RequestHandler = async (req, res, next) => {
 		// 	res.setHeader('Content-Disposition', `inline; filename=${invoiceName}`);
 		// 	res.send(data);
 		// });
-		const file = fs.createReadStream(invoicePath);
-		res.setHeader('Content-Disposition', `inline; filename=${invoiceName}`);
-		file.pipe(res);
+		// const file = fs.createReadStream(invoicePath);
+		// res.setHeader('Content-Disposition', `inline; filename=${invoiceName}`);
+		// file.pipe(res);
 	} catch (error) {
 		console.log('TCL: getOrders:RequestHandler -> error', error);
 		const err = new Error(error);
