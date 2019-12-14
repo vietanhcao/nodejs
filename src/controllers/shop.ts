@@ -152,6 +152,8 @@ export const getInvoice: RequestHandler = async (req, res, next) => {
 				console.log('TCL: getInvoice:RequestHandler -> err', err);
 				return next(err);
 			}
+			res.setHeader('Content-Type', 'application/pdf');
+			res.setHeader('Content-Disposition', `inline; filename=${invoiceName}`);
 			res.send(data);
 		});
 	} catch (error) {
