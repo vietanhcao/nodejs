@@ -10,7 +10,7 @@ shopRouter.get('/', shopController.getIndex);
 
 shopRouter.get('/products', shopController.getProducts);
 
-shopRouter.get('/products/:productId', shopController.getProduct);
+shopRouter.get('/products/1/:productId', shopController.getProduct);
 
 shopRouter.get('/cart', isAuth, shopController.getCart);
 
