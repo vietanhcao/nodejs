@@ -161,7 +161,16 @@ export const getInvoice: RequestHandler = async (req, res, next) => {
 
 		pdfDoc.pipe(fs.createWriteStream(invoicePath));
 		pdfDoc.pipe(res);
-		pdfDoc.text('hello world');
+		pdfDoc.fontSize(26).text('Invoice', {
+			underline: true
+		});
+		pdfDoc.text('------------------------------------------');
+		let totalPrice = (order as any).products.reduce((totalPrice, prod) => {
+			pdfDoc.fontSize(14).text(`${prod.product.title} - ${prod.quantity} x $${prod.product.price}`);
+			return totalPrice + prod.quantity * prod.product.price;
+		}, 0);
+		pdfDoc.text(`---`);
+		pdfDoc.fontSize(20).text(`Total Price: $${totalPrice}`);
 		pdfDoc.end();
 		// fs.readFile(invoicePath, (err, data) => {
 		// 	if (err) {

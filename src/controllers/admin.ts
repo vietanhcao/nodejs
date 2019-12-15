@@ -2,6 +2,7 @@ import { RequestHandler, Request } from 'express';
 import Product from '../models/product';
 import { Document, Types } from 'mongoose';
 import { validationResult } from 'express-validator';
+import { deleteFile } from '../ultil/file';
 
 interface DocumentAddProperty extends Document {
 	[key: string]: any;
@@ -120,6 +121,7 @@ export const postEditProduct: RequestHandler = async (req, res, next) => {
 		product.description = description;
 		product.price = price;
 		if (image) {
+			deleteFile(product.imageUrl);
 			product.imageUrl = image.path;
 		}
 		await product.save();
@@ -135,6 +137,12 @@ export const postEditProduct: RequestHandler = async (req, res, next) => {
 export const postDeleteProduct: RequestHandler = async (req: any, res, next) => {
 	try {
 		const { productId } = req.body;
+		let product: DocumentAddProperty = await Product.findById(productId);
+		if (!product) {
+			return next(new Error('Product not found!'));
+		}
+		deleteFile(product.imageUrl);
+
 		await Product.deleteOne({ _id: productId, userId: req.user._id });
 		res.redirect('/admin/products');
 	} catch (error) {
