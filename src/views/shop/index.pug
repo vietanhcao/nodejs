@@ -15,5 +15,8 @@ block content
               if isAuthenticated
                 .card__actions
                   include ../includes/add-to-card.pug
+        section.pagination 
+          a(href="/?page=1") 1          
+          a(href="/?page=2") 2          
       else
           h1 No Products
