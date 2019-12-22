@@ -136,9 +136,9 @@ export const postEditProduct: RequestHandler = async (req, res, next) => {
 	}
 };
 
-export const postDeleteProduct: RequestHandler = async (req: any, res, next) => {
+export const deleteProduct: RequestHandler = async (req: any, res, next) => {
 	try {
-		const { productId } = req.body;
+		const { productId } = req.params;
 		let product: DocumentAddProperty = await Product.findById(productId);
 		if (!product) {
 			return next(new Error('Product not found!'));
@@ -146,12 +146,10 @@ export const postDeleteProduct: RequestHandler = async (req: any, res, next) => 
 		deleteFile(product.imageUrl);
 
 		await Product.deleteOne({ _id: productId, userId: req.user._id });
-		res.redirect('/admin/products');
+		res.status(200).json({ message: 'Success!' });
 	} catch (error) {
-		console.log('TCL: postDeleteProduct:RequestHandler -> error', error);
 		const err = new Error(error);
-		(err as any).httpStatusCode = 500;
-		return next(err);
+		res.status(500).json({ message: 'deleting product fail!' });
 	}
 };
 

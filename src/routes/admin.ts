@@ -40,6 +40,6 @@ _adminRouter.post(
 	adminController.postEditProduct
 );
 
-_adminRouter.post('/delete-product', isAuth, adminController.postDeleteProduct);
+_adminRouter.delete('/product/:productId', isAuth, adminController.deleteProduct);
 
 export const adminRouter = _adminRouter;
