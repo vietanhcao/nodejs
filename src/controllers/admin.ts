@@ -8,6 +8,8 @@ interface DocumentAddProperty extends Document {
 	[key: string]: any;
 }
 
+const ITEMS_PER_PAGE = 2;
+
 export const getAddProduct: RequestHandler = (req, res, next) => {
 	// next(); // allow request to next continue middleware  in liners
 	// console.log(rootDir)
@@ -155,15 +157,27 @@ export const postDeleteProduct: RequestHandler = async (req: any, res, next) => 
 
 export const getProducts: RequestHandler = async (req: any, res, next) => {
 	try {
-		let products = await Product.find({ userId: req.user._id });
 		// .select('title price -_id')//select poduct
 		// .populate('userId', 'name')// seclect inside userId (related)
-		// console.log('TCL: getProducts:RequestHandler -> products',products);
 		// console.trace('TCL: getProducts:RequestHandler -> products',products);
+		const page = +req.query.page || 1;
+
+		const totalItems = await Product.find().countDocuments();
+
+		const products = await Product.find({ userId: req.user._id })
+			.skip((page - 1) * ITEMS_PER_PAGE)
+			.limit(ITEMS_PER_PAGE);
+		// const Products = await Product.find().cursor().next();
 		res.render('admin/products', {
 			prods: products,
 			pageTitle: 'Admin Products',
-			path: '/admin/products'
+			path: '/admin/products',
+			currentPage: page,
+			hasNextPage: ITEMS_PER_PAGE * page < totalItems,
+			hasPreviousPage: page > 1,
+			nextPage: page + 1,
+			previousPage: page - 1,
+			lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE)
 		});
 	} catch (error) {
 		console.log('TCL: getProducts:RequestHandler -> error', error);

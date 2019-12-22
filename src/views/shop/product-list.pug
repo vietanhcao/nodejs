@@ -16,5 +16,6 @@ block content
                 a(href=("/products/" + product._id) class="btn") Detail
                 if isAuthenticated
                   include ../includes/add-to-card.pug
+        include ../includes/pagination.pug
       else
           h1 No Products

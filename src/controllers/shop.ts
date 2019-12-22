@@ -6,17 +6,27 @@ import fs from 'fs';
 import path from 'path';
 import PDFDocument from 'pdfkit';
 
-const ITEMS_PER_PAGE = 1;
+const ITEMS_PER_PAGE = 2;
 
 export const getProducts: RequestHandler = async (req, res, next) => {
 	// res.sendFile(path.join(rootDir,'views','shop.html'))// not slash because on windown \ , linus use / dir
 	try {
+		const page = +req.query.page || 1;
+
+		const totalItems = await Product.find().countDocuments();
+
+		const products = await Product.find().skip((page - 1) * ITEMS_PER_PAGE).limit(ITEMS_PER_PAGE);
 		// const Products = await Product.find().cursor().next();
-		const products = await Product.find();
 		res.render('shop/product-list', {
 			prods: products,
 			pageTitle: 'All Product',
-			path: '/products'
+			path: '/products',
+			currentPage: page,
+			hasNextPage: ITEMS_PER_PAGE * page < totalItems,
+			hasPreviousPage: page > 1,
+			nextPage: page + 1,
+			previousPage: page - 1,
+			lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE)
 		});
 	} catch (error) {
 		console.log('get product', error);
