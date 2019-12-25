@@ -92,7 +92,6 @@ export const getCart: RequestHandler = async (req: any, res, next) => {
 			path: '/cart'
 		});
 	} catch (error) {
-		console.log('TCL: getCart:RequestHandler -> error', error);
 		const err = new Error(error);
 		(err as any).httpStatusCode = 500;
 		return next(err);
@@ -105,7 +104,6 @@ export const postCart: RequestHandler = async (req: any, res, next) => {
 		await req.user.addToCart(product);
 		res.redirect('/cart');
 	} catch (error) {
-		console.log('TCL: postCart:RequestHandler -> error', error);
 		const err = new Error(error);
 		(err as any).httpStatusCode = 500;
 		return next(err);
@@ -117,7 +115,6 @@ export const postCartDeleteProduct: RequestHandler = async (req: any, res, next)
 		await req.user.deleteItemFromCart(productId);
 		res.redirect('/cart');
 	} catch (error) {
-		console.log('TCL: postCartDeleteProduct:RequestHandler -> error', error);
 		const err = new Error(error);
 		(err as any).httpStatusCode = 500;
 		return next(err);
@@ -132,7 +129,28 @@ export const getOrders: RequestHandler = async (req: any, res, next) => {
 			path: '/orders'
 		});
 	} catch (error) {
-		console.log('TCL: getOrders:RequestHandler -> error', error);
+		const err = new Error(error);
+		(err as any).httpStatusCode = 500;
+		return next(err);
+	}
+};
+export const getCheckout: RequestHandler = async (req: any, res, next) => {
+	try {
+		let user = await req.user
+			.populate('cart.items.productId') //'cart.items.productId' => execute get data ref
+			.execPopulate(); // wrap promise and excecuted
+		let products = user.cart.items;
+		let total = products.reduce((total, p) => {
+			return total + p.quantity * p.productId.price;
+		}, 0);
+		res.render('shop/checkout', {
+			products: products,
+			pageTitle: 'Checkout',
+			path: '/checkout',
+			totalSum: total
+		});
+	} catch (error) {
+		console.log('TCL: getCheckout:RequestHandler -> error', error);
 		const err = new Error(error);
 		(err as any).httpStatusCode = 500;
 		return next(err);
@@ -158,7 +176,6 @@ export const postOrder: RequestHandler = async (req: any, res, next) => {
 		await req.user.clearCart();
 		res.redirect('/orders');
 	} catch (error) {
-		console.log('TCL: postOrder:RequestHandler -> error', error);
 		const err = new Error(error);
 		(err as any).httpStatusCode = 500;
 		return next(err);
@@ -195,7 +212,6 @@ export const getInvoice: RequestHandler = async (req, res, next) => {
 		pdfDoc.end();
 		// fs.readFile(invoicePath, (err, data) => {
 		// 	if (err) {
-		// 		console.log('TCL: getInvoice:RequestHandler -> err', err);
 		// 		return next(err);
 		// 	}
 		// 	res.setHeader('Content-Type', 'application/pdf');
@@ -206,7 +222,6 @@ export const getInvoice: RequestHandler = async (req, res, next) => {
 		// res.setHeader('Content-Disposition', `inline; filename=${invoiceName}`);
 		// file.pipe(res);
 	} catch (error) {
-		console.log('TCL: getOrders:RequestHandler -> error', error);
 		const err = new Error(error);
 		(err as any).httpStatusCode = 500;
 		return next(err);

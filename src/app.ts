@@ -91,6 +91,7 @@ app.use(authRouter);
 app.get('/500', errorControllers.get500Page);
 app.get('/404', errorControllers.get404Page);
 app.use((error, req, res, next) => {
+	console.log('TCL: error', error);
 	// res.status(error.httpStatusCode)
 	// res.redirect('/500');
 	res.status(500).render('500', {
