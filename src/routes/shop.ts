@@ -20,7 +20,6 @@ shopRouter.post('/cart-delete-item', isAuth, shopController.postCartDeleteProduc
 
 shopRouter.get('/orders', isAuth, shopController.getOrders);
 
-shopRouter.post('/create-order', isAuth, shopController.postOrder);
 
 shopRouter.get('/orders/:orderId', isAuth, shopController.getInvoice);
 

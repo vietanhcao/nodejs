@@ -14,6 +14,8 @@ import csurf from 'csurf';
 import flash from 'connect-flash';
 import multer from 'multer';
 import { appendFile } from 'fs';
+import isAuth from './middleware/is-auth';
+import * as shopController from './controllers/shop';
 
 const csurfProtection = csurf();
 const MongoDBStore = connect(session);
@@ -57,11 +59,10 @@ app.use(
 		store: store
 	})
 );
-app.use(csurfProtection);
+
 app.use(flash());
 app.use((req, res, next) => {
 	res.locals.isAuthenticated = req.session.isLoggedIn; //You are passing the  object into the pug template
-	res.locals.csrfToken = req.csrfToken();
 	next();
 });
 
@@ -84,6 +85,13 @@ app.use(async (req, res, next) => {
 });
 
 // => rounter .....
+app.post('/create-order', isAuth, shopController.postOrder); // not check protect csrf
+
+app.use(csurfProtection);
+app.use((req, res, next) => {
+	res.locals.csrfToken = req.csrfToken();// begin pass csrf to client
+	next();
+});
 app.use('/admin', adminRouter);
 app.use(shopRouter); //every thing not found in shop will swich to authRouter
 app.use(authRouter);

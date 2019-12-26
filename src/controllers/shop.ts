@@ -5,7 +5,8 @@ import Order from '../models/order';
 import fs from 'fs';
 import path from 'path';
 import PDFDocument from 'pdfkit';
-
+import Stripe from 'stripe';
+const stripe = new Stripe('sk_test_OuAYWPBmXlctjlJ1TdzMQOqh00H6VqKb1u');
 const ITEMS_PER_PAGE = 2;
 
 export const getProducts: RequestHandler = async (req, res, next) => {
@@ -150,7 +151,6 @@ export const getCheckout: RequestHandler = async (req: any, res, next) => {
 			totalSum: total
 		});
 	} catch (error) {
-		console.log('TCL: getCheckout:RequestHandler -> error', error);
 		const err = new Error(error);
 		(err as any).httpStatusCode = 500;
 		return next(err);
@@ -158,10 +158,19 @@ export const getCheckout: RequestHandler = async (req: any, res, next) => {
 };
 export const postOrder: RequestHandler = async (req: any, res, next) => {
 	try {
+		// Set your secret key: remember to change this to your live secret key in production
+		// See your keys here: https://dashboard.stripe.com/account/apikeys
+		// Token is created using Stripe Checkout or Elements!
+		// Get the payment token ID submitted by the form:
+		const token = req.body.stripeToken; // Using Express
+
 		let user = await req.user
 			.populate('cart.items.productId') //'cart.items.productId' => execute get data ref
 			.execPopulate(); // wrap promise and excecuted
 		let products = user.cart.items;
+		let totalSum = products.reduce((total, p) => {
+			return total + p.quantity * p.productId.price;
+		}, 0); 
 		products = products.map((o) => {
 			return { product: { ...o.productId._doc }, quantity: o.quantity }; //_doc get all data
 		});
@@ -172,7 +181,18 @@ export const postOrder: RequestHandler = async (req: any, res, next) => {
 				email: req.user.email
 			}
 		});
-		await order.save();
+		const result = await order.save();
+		//charges stripe
+		const charge = await stripe.charges.create({
+			amount: totalSum * 100,
+			currency: 'usd',
+			description: 'Demo Order',
+			source: token,
+			metadata: {
+				order_id: result._id.toString() 
+			}
+		});
+    console.log("TCL: postOrder:RequestHandler -> charge", charge)
 		await req.user.clearCart();
 		res.redirect('/orders');
 	} catch (error) {

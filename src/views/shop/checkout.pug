@@ -11,3 +11,21 @@ block content
             h2 quantity: #{product.quantity}
     .centered 
       h2 Total #{totalSum}
+    .centered 
+      form#payment-form(action='/create-order' method='post')
+        script.stripe-button(
+          src='https://checkout.stripe.com/checkout.js' data-key='pk_test_tttCxRcjdELY8NxjuLrETsd200VD3pHozp' 
+          data-amount=(totalSum * 100 )
+          data-name='Your Order' 
+          data-description='All the items you ordewred' 
+          data-image='https://stripe.com/img/documentation/checkout/marketplace.png' data-locale='auto' 
+          data-currency='usd')
+        //- .form-row
+        //-   label(for='card-element')
+        //-     | Credit or debit card
+        //-   #card-element
+
+        //-   #card-errors(role='alert')
+        //- button Pay #{totalSum * 100} US$
+  //- script(src="http://js.stripe.com/v3/")
+  script(src="/js/checkout.js")

@@ -16,7 +16,8 @@
     "nodemailer-sendgrid-transport": "^0.2.0",
     "pdfkit": "^0.11.0",
     "pug": "^2.0.4",
-    "sequelize": "^5.21.1"
+    "sequelize": "^5.21.1",
+    "stripe": "^7.14.0"
   },
   "name": "nodebasic",
   "version": "1.0.0",
@@ -44,6 +45,7 @@
     "@types/nodemailer": "^6.2.2",
     "@types/pdfkit": "^0.10.4",
     "@types/sequelize": "^4.28.6",
+    "@types/stripe": "^7.13.18",
     "typescript": "^3.7.0-beta"
   }
 }
