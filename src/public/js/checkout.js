@@ -33,3 +33,16 @@
 //     stripeTokenHandler(token);
 //   }
 // });
+
+// function stripeTokenHandler(token) {
+//   // Insert the token ID into the form so it gets submitted to the server
+//   var form = document.getElementById('payment-form');
+//   var hiddenInput = document.createElement('input');
+//   hiddenInput.setAttribute('type', 'hidden');
+//   hiddenInput.setAttribute('name', 'stripeToken');
+//   hiddenInput.setAttribute('value', token.id);
+//   form.appendChild(hiddenInput);
+
+//   // Submit the form
+//   form.submit();
+// }

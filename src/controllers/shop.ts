@@ -170,7 +170,7 @@ export const postOrder: RequestHandler = async (req: any, res, next) => {
 		let products = user.cart.items;
 		let totalSum = products.reduce((total, p) => {
 			return total + p.quantity * p.productId.price;
-		}, 0); 
+		}, 0);
 		products = products.map((o) => {
 			return { product: { ...o.productId._doc }, quantity: o.quantity }; //_doc get all data
 		});
@@ -189,10 +189,9 @@ export const postOrder: RequestHandler = async (req: any, res, next) => {
 			description: 'Demo Order',
 			source: token,
 			metadata: {
-				order_id: result._id.toString() 
+				order_id: result._id.toString()
 			}
 		});
-    console.log("TCL: postOrder:RequestHandler -> charge", charge)
 		await req.user.clearCart();
 		res.redirect('/orders');
 	} catch (error) {
