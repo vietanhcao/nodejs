@@ -17,10 +17,12 @@ import { appendFile } from 'fs';
 import isAuth from './middleware/is-auth';
 import * as shopController from './controllers/shop';
 
+console.log(process.env.NODE_ENV);
+
 const csurfProtection = csurf();
 const MongoDBStore = connect(session);
 
-const MONGODB_URL = 'mongodb+srv://vietanhcao:sao14111@cluster0-iyrhv.mongodb.net/shop?retryWrites=true&w=majority';
+const MONGODB_URL = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0-iyrhv.mongodb.net/${process.env.MONGO_DEFAULT_DATABASE}`;
 
 const app = express();
 const store = new MongoDBStore({
@@ -114,7 +116,7 @@ app.use((error, req, res, next) => {
 mongoose
 	.connect(MONGODB_URL)
 	.then(async (result) => {
-		app.listen(3002);
+		app.listen(process.env.PORT || 3000);
 	})
 	.catch((error) => {
 		console.log(error);

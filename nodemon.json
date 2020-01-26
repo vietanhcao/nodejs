@@ -7,5 +7,11 @@
         "src/**/*.spec.ts",
         "*.txt"
     ],
-    "exec": "ts-node ./src/app.ts"
+    "exec": "ts-node ./src/app.ts",
+    "env": {
+        "MONGO_USER": "vietanhcao",
+        "MONGO_PASSWORD": "sao14111",
+        "MONGO_DEFAULT_DATABASE": "shop",
+        "STRIPE_KEY": "sk_test_OuAYWPBmXlctjlJ1TdzMQOqh00H6VqKb1u"
+    }
 }

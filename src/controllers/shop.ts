@@ -6,7 +6,7 @@ import fs from 'fs';
 import path from 'path';
 import PDFDocument from 'pdfkit';
 import Stripe from 'stripe';
-const stripe = new Stripe('sk_test_OuAYWPBmXlctjlJ1TdzMQOqh00H6VqKb1u');
+const stripe = new Stripe(process.env.STRIPE_KEY);
 const ITEMS_PER_PAGE = 2;
 
 export const getProducts: RequestHandler = async (req, res, next) => {
@@ -172,7 +172,7 @@ export const postOrder: RequestHandler = async (req: any, res, next) => {
 			return total + p.quantity * p.productId.price;
 		}, 0);
 		products = products.map((o) => {
-			return { product: { ...o.productId._doc }, quantity: o.quantity }; //_doc get all data
+			return { product: { ...o.productId._doc }, quantity: o.quantity }; // destructor has _doc
 		});
 		const order = new Order({
 			products: products,

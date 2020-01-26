@@ -25,7 +25,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon"
+    "start": "NODE_ENV=production MONGO_USER=vietanhcao MONGO_PASSWORD=sao14111 MONGO_DEFAULT_DATABASE=shop STRIPE_KEY=sk_test_OuAYWPBmXlctjlJ1TdzMQOqh00H6VqKb1u ts-node src/app",
+    "start:dev": "nodemon"
   },
   "author": "vietanhcao <vietanhcao1994@gmail.com>",
   "license": "MIT",

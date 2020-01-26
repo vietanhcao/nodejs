@@ -191,15 +191,32 @@ export const postReset: RequestHandler = async (req, res, next) => {
 			(userDoc as any).resetTokenExpiration = Date.now() + 3600000;
 			await userDoc.save();
 			res.redirect('/');
-			await transporter.sendMail({
-				to: email,
-				from: 'shop@node1-complete.com',
-				subject: 'Password reset',
-				html: `
-					<p>You requested a password reset </p>
-					<p>Click this   <a href="http://localhost:3002/reset/${token}"> link </a> to set a new password. </p>
-			`
-			});
+			//send many email ~ 5000
+			const users = [1];
+			for (let i = 0; i < users.length; i += 100) {
+				const request = users.slice(i, i + 100).map(async(user) => {
+					return await transporter.sendMail({
+						to: email,
+						from: 'shop@node1-complete.com',
+						subject: 'Password reset',
+						html: `
+							<p>You requested a password reset </p>
+							<p>Click this   <a href="http://localhost:3002/reset/${token}"> link </a> to set a new password. </p>
+					`
+					}).catch(e => console.log('Error in sending email fok' + user + e));
+				})
+				await Promise.all(request).catch(e => console.log('Error in sending email fok' + i + e));
+
+			}
+			// await transporter.sendMail({
+			// 	to: email,
+			// 	from: 'shop@node1-complete.com',
+			// 	subject: 'Password reset',
+			// 	html: `
+			// 		<p>You requested a password reset </p>
+			// 		<p>Click this   <a href="http://localhost:3002/reset/${token}"> link </a> to set a new password. </p>
+			// `
+			// });
 		} catch (error) {
 			console.log('TCL: postReset:RequestHandler -> error', error);
 			const err = new Error(error);
