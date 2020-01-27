@@ -1,6 +1,6 @@
 import express from 'express';
 import path from 'path';
-import { getYourPath as rootDir } from '../ultil/path';
+import { getYourPath as rootDir } from '../util/path';
 import * as adminController from '../controllers/admin';
 import isAuth from '../middleware/is-auth';
 import { check, body } from 'express-validator';

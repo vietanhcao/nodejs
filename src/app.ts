@@ -4,7 +4,7 @@ import path from 'path';
 import { adminRouter } from './routes/admin';
 import shopRouter from './routes/shop';
 import * as errorControllers from './controllers/error';
-import { getYourPath } from './ultil/path';
+import { getYourPath } from './util/path';
 import mongoose from 'mongoose';
 import User from './models/user';
 import authRouter from './routes/auth';
@@ -31,7 +31,7 @@ const store = new MongoDBStore({
 });
 const fileStorage = multer.diskStorage({
 	destination: (req, file, cb) => {
-		cb(null, 'src/images');
+		cb(null, 'src/images');// place where we yarn start 
 	},
 	filename: (req, file, cb) => {
 		cb(null, `${new Date().toISOString()} - ${file.originalname}`);

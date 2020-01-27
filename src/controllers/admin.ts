@@ -2,7 +2,7 @@ import { RequestHandler, Request } from 'express';
 import Product from '../models/product';
 import { Document, Types } from 'mongoose';
 import { validationResult } from 'express-validator';
-import { deleteFile } from '../ultil/file';
+import { deleteFile } from '../util/file';
 
 interface DocumentAddProperty extends Document {
 	[key: string]: any;
