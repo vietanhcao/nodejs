@@ -1,6 +1,7 @@
 import express, { RequestHandler } from 'express';
 import bodyParser from 'body-parser';
 import path from 'path';
+import fs from 'fs';
 import { adminRouter } from './routes/admin';
 import shopRouter from './routes/shop';
 import * as errorControllers from './controllers/error';
@@ -17,16 +18,20 @@ import { appendFile } from 'fs';
 import isAuth from './middleware/is-auth';
 import * as shopController from './controllers/shop';
 import helmet from 'helmet';
+import compression from 'compression';
+import morgan from 'morgan';
 import dotenv from 'dotenv';
 
-dotenv.config()
+dotenv.config();
+const accessLogStrean = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 
 console.log(process.env.NODE_ENV);
 
 const csurfProtection = csurf();
 const MongoDBStore = connect(session);
 
-const MONGODB_URL = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0-iyrhv.mongodb.net/${process.env.MONGO_DEFAULT_DATABASE}`;
+const MONGODB_URL = `mongodb+srv://${process.env.MONGO_USER}:${process.env
+	.MONGO_PASSWORD}@cluster0-iyrhv.mongodb.net/${process.env.MONGO_DEFAULT_DATABASE}`;
 
 const app = express();
 const store = new MongoDBStore({
@@ -35,7 +40,7 @@ const store = new MongoDBStore({
 });
 const fileStorage = multer.diskStorage({
 	destination: (req, file, cb) => {
-		cb(null, 'src/images');// place where we yarn start 
+		cb(null, 'src/images'); // place where we yarn start
 	},
 	filename: (req, file, cb) => {
 		cb(null, `${new Date().toISOString()} - ${file.originalname}`);
@@ -52,7 +57,9 @@ const fileFilter = (req, file, cb) => {
 app.set('view engine', 'pug');
 app.set('views', getYourPath + '/views');
 
-app.use(helmet())
+app.use(helmet());
+app.use(compression());
+app.use(morgan('combined', { stream: accessLogStrean }));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'));
@@ -97,7 +104,7 @@ app.post('/create-order', isAuth, shopController.postOrder); // not check protec
 
 app.use(csurfProtection);
 app.use((req, res, next) => {
-	res.locals.csrfToken = req.csrfToken();// begin pass csrf to client
+	res.locals.csrfToken = req.csrfToken(); // begin pass csrf to client
 	next();
 });
 app.use('/admin', adminRouter);
