@@ -16,6 +16,10 @@ import multer from 'multer';
 import { appendFile } from 'fs';
 import isAuth from './middleware/is-auth';
 import * as shopController from './controllers/shop';
+import helmet from 'helmet';
+import dotenv from 'dotenv';
+
+dotenv.config()
 
 console.log(process.env.NODE_ENV);
 
@@ -47,6 +51,8 @@ const fileFilter = (req, file, cb) => {
 };
 app.set('view engine', 'pug');
 app.set('views', getYourPath + '/views');
+
+app.use(helmet())
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'));
