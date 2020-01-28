@@ -1,5 +1,7 @@
 import express, { RequestHandler } from 'express';
 import bodyParser from 'body-parser';
+import https from 'https';
+
 import path from 'path';
 import fs from 'fs';
 import { adminRouter } from './routes/admin';
@@ -20,27 +22,30 @@ import * as shopController from './controllers/shop';
 import helmet from 'helmet';
 import compression from 'compression';
 import morgan from 'morgan';
-import * as rfs from 'rotating-file-stream'
+import * as rfs from 'rotating-file-stream';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
 //TODO: morgan
 // const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
-const logDirectory = path.join(__dirname, 'log')
+const logDirectory = path.join(__dirname, 'log');
 // ensure log directory exists
-fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
+fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
 // create a rotating write stream
 const accessLogStream = rfs.createStream('access.log', {
-  interval: '1d', // rotate daily
+	interval: '1d', // rotate daily
 	path: logDirectory,
-	maxFiles:1
-})
+	maxFiles: 1
+});
 
 console.log(process.env.NODE_ENV);
 
 const csurfProtection = csurf();
 const MongoDBStore = connect(session);
+
+const privateKey = fs.readFileSync('server.key');
+const certificate = fs.readFileSync('server.cert');
 
 const MONGODB_URL = `mongodb+srv://${process.env.MONGO_USER}:${process.env
 	.MONGO_PASSWORD}@cluster0-iyrhv.mongodb.net/${process.env.MONGO_DEFAULT_DATABASE}`;
@@ -142,6 +147,8 @@ mongoose
 	.connect(MONGODB_URL)
 	.then(async (result) => {
 		app.listen(process.env.PORT || 3000);
+		// https
+		// 	.createServer({ key: privateKey, cert: certificate }, app).listen(process.env.PORT || 3000);
 	})
 	.catch((error) => {
 		console.log(error);
