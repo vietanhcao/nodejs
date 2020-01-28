@@ -2270,6 +2270,11 @@ rndm@1.2.0:
   resolved "https://registry.yarnpkg.com/rndm/-/rndm-1.2.0.tgz#f33fe9cfb52bbfd520aa18323bc65db110a1b76c"
   integrity sha1-8z/pz7Urv9UgqhgyO8ZdsRCht2w=
 
+rotating-file-stream@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/rotating-file-stream/-/rotating-file-stream-2.0.2.tgz#277033374653a1292243aabd23b95a1e37391d9e"
+  integrity sha512-xu0LXI7NMnXOMkNbJyLDTEtfHf6BOLMweZeaKd37QZLiSk+eAi/wTmxTONNK8e9lfJfge1P3I3QoiLmLb2Kyyw==
+
 safe-buffer@5.1.2, safe-buffer@~5.1.0, safe-buffer@~5.1.1:
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.2.tgz#991ec69d296e0313747d59bdfd2b745c35f8828d"

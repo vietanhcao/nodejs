@@ -3,6 +3,7 @@ node_modules/
 src/data
 src/*.js
 src/images
+src/log
 src/*.txt
 out/
 .vscode/

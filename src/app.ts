@@ -20,10 +20,22 @@ import * as shopController from './controllers/shop';
 import helmet from 'helmet';
 import compression from 'compression';
 import morgan from 'morgan';
+import * as rfs from 'rotating-file-stream'
 import dotenv from 'dotenv';
 
 dotenv.config();
-const accessLogStrean = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
+
+//TODO: morgan
+// const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
+const logDirectory = path.join(__dirname, 'log')
+// ensure log directory exists
+fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
+// create a rotating write stream
+const accessLogStream = rfs.createStream('access.log', {
+  interval: '1d', // rotate daily
+	path: logDirectory,
+	maxFiles:1
+})
 
 console.log(process.env.NODE_ENV);
 
@@ -59,7 +71,7 @@ app.set('views', getYourPath + '/views');
 
 app.use(helmet());
 app.use(compression());
-app.use(morgan('combined', { stream: accessLogStrean }));
+app.use(morgan('combined', { stream: accessLogStream }));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'));
