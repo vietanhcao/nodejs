@@ -227,6 +227,8 @@ exports.getInvoice = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         const invoicePath = path_1.default.join('src', 'data', 'invoices', invoiceName);
         const pdfDoc = new pdfkit_1.default();
         res.setHeader('Content-Disposition', `inline; filename=${invoiceName}`);
+        res.setHeader('Content-type', 'application/pdf');
+        res.setHeader("Content-Type", "application/force-download");
         pdfDoc.pipe(fs_1.default.createWriteStream(invoicePath));
         pdfDoc.pipe(res);
         pdfDoc.fontSize(26).text('Invoice', {

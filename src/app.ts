@@ -57,7 +57,7 @@ const store = new MongoDBStore({
 });
 const fileStorage = multer.diskStorage({
 	destination: (req, file, cb) => {
-		cb(null, '/images'); // place where we yarn start // alternative src
+		cb(null, 'build/images'); // place where we yarn start // alternative src
 	},
 	filename: (req, file, cb) => {
 		cb(null, `${new Date().toISOString()} - ${file.originalname}`);
@@ -82,7 +82,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'));
 // app.disable('etag');
 app.use(express.static(path.join(__dirname, 'public'))); //file css
-app.use('/images', express.static(path.join(__dirname, 'images'))); // '/' indicate root folder not to this project folder. ---- __dirname(app.ts) ->> images
+app.use('/build/images', express.static(path.join(__dirname, 'images'))); // '/' indicate root folder not to this project folder. ---- __dirname(app.ts) ->> images
 app.use(
 	session({
 		secret: 'my secret',

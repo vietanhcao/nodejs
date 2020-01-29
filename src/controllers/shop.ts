@@ -215,6 +215,8 @@ export const getInvoice: RequestHandler = async (req, res, next) => {
 
 		const pdfDoc = new PDFDocument();
 		res.setHeader('Content-Disposition', `inline; filename=${invoiceName}`);
+		res.setHeader('Content-type', 'application/pdf');
+		res.setHeader("Content-Type", "application/force-download");
 
 		pdfDoc.pipe(fs.createWriteStream(invoicePath));
 		pdfDoc.pipe(res);
