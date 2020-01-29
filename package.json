@@ -34,6 +34,9 @@
     "start": "ts-node src/app",
     "start:dev": "nodemon"
   },
+  "engines": {
+    "node":"12.4.0"
+  },
   "author": "vietanhcao <vietanhcao1994@gmail.com>",
   "license": "MIT",
   "devDependencies": {

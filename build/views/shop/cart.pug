@@ -1,0 +1,26 @@
+extends ../layouts/main-layout.pug 
+block styles
+  link(rel="stylesheet", href="/css/cart.css")
+block content
+  main
+    if products.length > 0 
+      ul.cart__item-list
+        each product in products
+          li.cart__item 
+            //- connect quantity through cartItem
+            p #{product.productId.title} (#{product.quantity}) 
+            form(action="/cart-delete-item", method="post")
+              input(type="hidden", name="productId" value=product.productId._id)
+              input(type="hidden", name="_csrf", value=csrfToken)
+              button.btn(type="submit") delete
+      .centered
+        br
+        //- form(action="/create-order", method="post")
+        //-   input(type="hidden", name="_csrf", value=csrfToken)
+        //-   button.btn(type="submit") Order Now!
+        a.btn(href="/checkout") Order Now!
+
+
+
+    else
+      h1 No Products in Cart!
